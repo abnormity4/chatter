@@ -10,6 +10,8 @@ import UsernameInput from "@/components/username-input";
 import UserAvatarGrid from "@/components/useravatar-grid";
 import {AnimatePresence, motion} from "framer-motion";
 import RegistrationNextButton from "@/components/registration-next-button";
+import {X} from "lucide-react";
+import OverlayCloseButton from "@/components/overlay-close-button";
 
 const SignupPage = ({avatarUrls}: {avatarUrls: string[]}) => {
     const [username, setUsername] = useState("Your nickname");
@@ -26,11 +28,11 @@ const SignupPage = ({avatarUrls}: {avatarUrls: string[]}) => {
             <div className="w-full self-center md:w-1/2">
                 <h1 className="text-lg md:text-3xl md:font-light text-neutral-200 text-center mb-3 md:mb-6 leading-7 font-google-sans-flex select-none">Let’s get you started</h1>
                 <ProgressBar value={1} maxValue={2} />
-            </div> {/*progress bar*/}
+            </div>
 
             <GridBackground className="flex items-center justify-center p-4 overflow-hidden grow">
                 <div className="flex flex-col gap-3 items-center">
-                    <div className="relative">
+                    <div className="relative group">
                         <div className="bg-neutral-800 border-3 border-neutral-700 rounded-full overflow-hidden">
                             <motion.div
                                 key={userAvatar}
@@ -48,6 +50,13 @@ const SignupPage = ({avatarUrls}: {avatarUrls: string[]}) => {
                             </motion.div>
                         </div>
                         <div className="size-8 bg-blue-400 border-2 border-neutral-800 rounded-full absolute bottom-3 right-5 z-10" />
+                        {userAvatar !== USERAVATAR_DEFAULT_URL && (
+                            <OverlayCloseButton
+                                onClick={() => {
+                                setUserAvatar(USERAVATAR_DEFAULT_URL)
+                            }} className={"top-0 right-8 size-8"}
+                            iconSize={"size-6"}/>
+                        )}
                     </div>
 
                     <h2 className="[mask-image:radial-gradient(circle_at_center,black_75%,transparent_100%)] text-2xl text-center text-neutral-200 text-shadow-2xs min-h-8 w-full overflow-hidden select-none whitespace-nowrap">{username}</h2>
@@ -61,7 +70,7 @@ const SignupPage = ({avatarUrls}: {avatarUrls: string[]}) => {
                     {/*    />*/}
                     {/*</div>*/}
                 </div>
-            </GridBackground> {/*username_input*/}
+            </GridBackground>
 
             <UserAvatarGrid
                 avatarUrls={avatarUrls}
