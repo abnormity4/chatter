@@ -6,7 +6,7 @@ import { MULTI_SPACES_REGEX } from "@/lib/constants";
 import UsernameInputValidation from "@/components/username-input-validation";
 import {UserNameValidationErrorsProp} from "@/lib/types";
 import {AnimatePresence, motion} from "framer-motion";
-import {usernameSchema} from "@/lib/schemas";
+import {usernameSchema} from "@/lib/zodschemas";
 
 const UsernameInput = (
     {

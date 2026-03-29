@@ -1,32 +1,41 @@
 import {useState} from "react";
 import {Eye} from "lucide-react";
 import Button from "@/components/button";
+import {createUser} from "@/app/(auth)/signup/actions";
 
 const SignupWindow = () => {
     const [showPassword, setShowPassword] = useState(false);
+    const [form, setForm] = useState({
+        username: "",
+        password: ""
+    });
 
     return (
         <div className="rounded-md p-4 bg-black divide-neutral-900">
             <h1 className="font-google-sans-flex text-xl text-center">Create account</h1>
 
-            <label htmlFor="registration-username-field">
+            <label htmlFor="username">
                 Login <span className="text-red-500">*</span>
                 <input
-                    id="registration-username-field"
+                    id="username"
                     type="text"
-                    name="registration-username-field"
+                    onChange={(e) => {
+                        setForm({...form, username: e.target.value});
+                    }}
                     className={`bg-neutral-950 border-neutral-900 focus:border-neutral-800 px-3 mb-4 border 
                     h-9 w-full rounded-lg text-sm font-light transition-colors outline-0`}
                 />
             </label>
 
-            <label htmlFor="registration-username-field">
+            <label htmlFor="password">
                 Password <span className="text-red-500">*</span>
                 <div className="relative">
                     <input
-                        id="registration-username-password"
+                        id="password"
                         type={showPassword ? "text" : "password"}
-                        name="registration-username-password"
+                        onChange={(e) => {
+                            setForm({...form, password: e.target.value});
+                        }}
                         className={`bg-neutral-950 border-neutral-900 focus:border-neutral-800 px-3 mb-4 
                         border h-9 w-full rounded-lg text-sm font-light transition-colors outline-0`}
 
@@ -36,7 +45,7 @@ const SignupWindow = () => {
                 </div>
             </label>
 
-            <Button>
+            <Button onClick={() => createUser(form)}>
                 Create account
             </Button>
 
