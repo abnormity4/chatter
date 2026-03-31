@@ -1,14 +1,36 @@
 "use server";
 import prisma from "@/lib/prisma";
-import {revalidatePath} from "next/cache";
+import { z } from "zod";
+import {emailSchema, passwordSchema} from "@/lib/zodschemas";
 
-export const createUser = async (form: {username: string, password: string}) => {
-    await prisma.user.create({
-        data: {
-            username: form.username,
-            password: form.password
-        }
+export const createUser = async (form: {email: string, password: string}) => {
+    const userSchema = z.object({
+        email: emailSchema,
+        password: passwordSchema
     })
 
-    revalidatePath("/signup");
+    const validationResult = userSchema.safeParse(form)
+
+    if (!validationResult.success) {
+        throw new Error("Validation failed")
+    } else {
+        const user = await getUserByEmail(form.email)
+
+        if (user) throw Error(`User with email ${form.email} already exists`)
+
+        await prisma.user.create({
+            data: {
+                email: form.email,
+                password: form.password
+            }
+        })
+    }
 }
+
+export const getUserByEmail = async (email: string) => {
+    return prisma.user.findFirst({
+        where: {email: email},
+        select: {email: true}
+    });
+};
+
