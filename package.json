@@ -12,6 +12,7 @@
     "@prisma/adapter-pg": "^7.6.0",
     "@prisma/client": "^7.6.0",
     "bcryptjs": "^3.0.3",
+    "class-variance-authority": "^0.7.1",
     "dotenv": "^17.3.1",
     "lucide-react": "^0.577.0",
     "motion": "^12.37.0",

@@ -5,3 +5,5 @@ export type UserNameValidationErrorsProp = {
     message: string,
     passed: boolean
 }[]
+
+export type FormFieldStatusCode = "neutral" | "error" | "success" | "loading";
