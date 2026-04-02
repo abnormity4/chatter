@@ -1,9 +1,7 @@
-"use client"
+'use client';
 
 const Home = () => {
-    return (
-        <p>Home page</p>
-    )
-}
+  return <p>Home page</p>;
+};
 
 export default Home;
