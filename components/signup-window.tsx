@@ -1,7 +1,7 @@
 import {ChangeEvent, useRef, useState} from "react";
 import {Eye} from "lucide-react";
 import Button from "@/components/button";
-import {createUser, getUserByEmail} from "@/app/(auth)/signup/actions";
+import {createUser, checkEmailAvailability} from "@/app/(auth)/signup/actions";
 import {emailSchema, passwordSchema} from "@/lib/zodschemas";
 import { z } from 'zod'
 import FormField from "@/components/form-field";
@@ -49,7 +49,7 @@ const SignupWindow = () => {
                 setEmailForm("error", "Please enter a valid email address.");
             } else {
                 setEmailForm("loading", null);
-                const user = await getUserByEmail(value);
+                const user = await checkEmailAvailability(value);
                 if (!!user) {
                     setEmailForm("error", "An account with this email already exists.");
                 } else {
