@@ -143,7 +143,10 @@ FormField.ValidationList = function FormFieldValidationList() {
   if (!errorList) return null;
 
   return (
-    <div className='p-2'>
+    <motion.div
+      initial={{ opacity: 0, y: -5 }}
+      animate={{ opacity: 1, y: 0 }}
+      className='p-2 absolute'>
       <ul className='space-y-1'>
         {errorList.map((err) => (
           <li
@@ -154,7 +157,7 @@ FormField.ValidationList = function FormFieldValidationList() {
           </li>
         ))}
       </ul>
-    </div>
+    </motion.div>
   );
 };
 

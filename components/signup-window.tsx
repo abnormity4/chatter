@@ -35,7 +35,7 @@ const SignupWindow = () => {
   };
 
   const [passwordVisible, setPasswordVisible] = useState(false);
-  const [passwordHadInput, setPasswordHadInput] = useState(false);
+  const [passwordHasInput, setPasswordHasInput] = useState(false);
   const [passwordForm, _setPasswordForm] = useState<FormField>({
     status: 'neutral',
     message: null,
@@ -80,11 +80,19 @@ const SignupWindow = () => {
 
   const handleEmail = (e: ChangeEvent<HTMLInputElement>) => {
     setEmailForm('neutral', null);
+    if (e.target.value === '') return;
     debouncedValidation.current(e.target.value);
   };
 
   const handlePassword = (e: ChangeEvent<HTMLInputElement>) => {
-    setPasswordHadInput(true);
+    setPasswordHasInput(true);
+
+    if (e.target.value === '') {
+      setPasswordHasInput(false);
+      setPasswordForm('neutral', null);
+      return;
+    }
+
     const passwordValidation = passwordSchema.safeParse(e.target.value);
     if (!passwordValidation.success) {
       const zodErrorArray = z.flattenError(passwordValidation.error);
@@ -105,7 +113,7 @@ const SignupWindow = () => {
   };
 
   return (
-    <div className='rounded-md p-4 bg-black divide-neutral-900 flex flex-col gap-8'>
+    <div className='rounded-md p-4 bg-black divide-neutral-900 flex flex-col gap-12'>
       <h1 className='font-google-sans-flex text-xl text-center'>
         Create account
       </h1>
@@ -138,7 +146,7 @@ const SignupWindow = () => {
               />
             </FormField.Icons>
           </FormField.Input>
-          {passwordHadInput && <FormField.ValidationList />}
+          {passwordHasInput && <FormField.ValidationList />}
         </FormField>
       </div>
 
