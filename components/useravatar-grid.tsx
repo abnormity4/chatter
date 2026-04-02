@@ -18,7 +18,7 @@ const UserAvatarGrid = ({
   return (
     <div
       className='w-full h-full
-            [mask-image:linear-gradient(to_bottom,transparent,black_40px,black_calc(100%-40px),transparent)]
+            [linear-gradient(to_bottom,transparent,black_40px,black_calc(100%-40px),transparent)]
         shrink flex justify-center items-start overflow-y-scroll scroll-auto [scrollbar-width:none]
         [&::-webkit-scrollbar]:hidden'>
       <div className='grid grid-cols-4 md:gap-4 gap-2 py-4'>

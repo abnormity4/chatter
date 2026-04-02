@@ -3,16 +3,19 @@ import { cva } from 'class-variance-authority';
 import SpinnerAnimation from '@/components/icons/SpinnerAnimation';
 import { motion } from 'motion/react';
 import { AnimatePresence } from 'framer-motion';
-import { FormFieldStatusCode } from '@/lib/types';
+import { FormFieldStatusCode, UserNameValidationErrorsProp } from '@/lib/types';
+import { Check } from 'lucide-react';
 
 type FormFieldProps = {
   status: FormFieldStatusCode;
   children: React.ReactNode;
+  errorList?: UserNameValidationErrorsProp;
 };
 
 type FormFieldContext = {
   id: string;
   status: FormFieldProps['status'];
+  errorList?: FormFieldProps['errorList'];
 };
 
 const FormFieldContext = createContext<FormFieldContext | undefined>(undefined);
@@ -25,10 +28,10 @@ const useFormFieldContext = () => {
   return context;
 };
 
-const FormField = ({ children, status }: FormFieldProps) => {
+const FormField = ({ children, status, errorList }: FormFieldProps) => {
   const id = useId();
   return (
-    <FormFieldContext value={{ id, status }}>
+    <FormFieldContext value={{ id, status, errorList }}>
       <div>{children}</div>
     </FormFieldContext>
   );
@@ -131,6 +134,26 @@ FormField.Loader = function FormFieldLoader() {
   return (
     <div className='h-full w-5 flex items-center text-neutral-500'>
       <SpinnerAnimation />
+    </div>
+  );
+};
+
+FormField.ValidationList = function FormFieldValidationList() {
+  const { errorList } = useFormFieldContext();
+  if (!errorList) return null;
+
+  return (
+    <div className='p-2'>
+      <ul className='space-y-1'>
+        {errorList.map((err) => (
+          <li
+            key={err.id}
+            className={`pl-5 relative text-[12px] leading-3 transition-colors ${!err.passed ? 'text-neutral-400' : 'text-neutral-200'} select-none`}>
+            {err.passed && <Check className='absolute left-1 size-3' />}
+            {err.message}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };

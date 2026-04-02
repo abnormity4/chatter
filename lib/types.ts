@@ -1,4 +1,6 @@
-export type UsernameValidationErrorIds = 'too_short' | 'too_long';
+type UsernameValidationErrorIds =
+  | 'invalid_length'
+  | 'not_enough_unique_characters';
 
 export type UserNameValidationErrorsProp = {
   id: UsernameValidationErrorIds;

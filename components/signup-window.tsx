@@ -8,8 +8,9 @@ import {
 import { emailSchema, passwordSchema } from '@/lib/zodschemas';
 import { z } from 'zod';
 import FormField from '@/components/form-field';
-import { FormFieldStatusCode } from '@/lib/types';
+import { FormFieldStatusCode, UserNameValidationErrorsProp } from '@/lib/types';
 import { debounce } from '@/lib/utils';
+import { PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH } from '@/lib/constants';
 
 type FormField = {
   status: FormFieldStatusCode;
@@ -34,6 +35,7 @@ const SignupWindow = () => {
   };
 
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const [passwordHadInput, setPasswordHadInput] = useState(false);
   const [passwordForm, _setPasswordForm] = useState<FormField>({
     status: 'neutral',
     message: null,
@@ -44,6 +46,19 @@ const SignupWindow = () => {
   ) => {
     _setPasswordForm({ status, message });
   };
+  const [passwordErrorList, setPasswordErrorList] =
+    useState<UserNameValidationErrorsProp>([
+      {
+        id: 'invalid_length',
+        message: `Must be at least ${PASSWORD_MIN_LENGTH}-${PASSWORD_MAX_LENGTH} characters long.`,
+        passed: false,
+      },
+      {
+        id: 'not_enough_unique_characters',
+        message: 'Must contain at least 2 unique characters.',
+        passed: false,
+      },
+    ]);
 
   const debouncedValidation = useRef(
     debounce(async (value: string) => {
@@ -69,12 +84,22 @@ const SignupWindow = () => {
   };
 
   const handlePassword = (e: ChangeEvent<HTMLInputElement>) => {
+    setPasswordHadInput(true);
     const passwordValidation = passwordSchema.safeParse(e.target.value);
     if (!passwordValidation.success) {
-      const flattened = z.flattenError(passwordValidation.error);
-      setPasswordForm('error', flattened.formErrors.toString());
+      const zodErrorArray = z.flattenError(passwordValidation.error);
+      setPasswordForm('error', null);
+      setPasswordErrorList((prev) =>
+        prev.map((err) => ({
+          ...err,
+          passed: !zodErrorArray.formErrors.includes(err.id),
+        })),
+      );
     } else {
       setPasswordForm('success', null);
+      setPasswordErrorList((prev) =>
+        prev.map((err) => ({ ...err, passed: true })),
+      );
       setForm((prev) => ({ ...prev, password: e.target.value }));
     }
   };
@@ -99,7 +124,7 @@ const SignupWindow = () => {
           <FormField.Message>{emailForm.message}</FormField.Message>
         </FormField>
 
-        <FormField status={passwordForm.status}>
+        <FormField status={passwordForm.status} errorList={passwordErrorList}>
           <FormField.Label>Password</FormField.Label>
           <FormField.Input
             type={passwordVisible ? 'text' : 'password'}
@@ -113,6 +138,7 @@ const SignupWindow = () => {
               />
             </FormField.Icons>
           </FormField.Input>
+          {passwordHadInput && <FormField.ValidationList />}
         </FormField>
       </div>
 
