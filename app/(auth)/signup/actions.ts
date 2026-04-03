@@ -14,7 +14,11 @@ export const createUser = async (form: { email: string; password: string }) => {
   const validationResult = userSchema.safeParse(form);
 
   if (!validationResult.success) {
-    throw new Error(validationResult.error.message);
+    return {
+      success: false,
+      message:
+        'Failed to validate request. Error: ' + validationResult.error,
+    };
   }
 
   const hash = await bcrypt.hash(validationResult.data.password, 10);
@@ -28,12 +32,20 @@ export const createUser = async (form: { email: string; password: string }) => {
         displayName: displayName,
       },
     });
+    return {
+      success: true,
+      message: `User "${displayName}" created successfully.`,
+    };
   } catch (e) {
     if (e instanceof Prisma.PrismaClientKnownRequestError) {
       if (e.code === 'P2002') {
-        throw new Error('An account with this email already exists.');
+        return {
+          success: false,
+          message: `User with email "${validationResult.data.email}" already exists.`,
+        };
       }
     }
+    return { success: false, message: 'An unexpected error occurred.' };
   }
 };
 

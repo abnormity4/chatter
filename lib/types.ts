@@ -9,3 +9,8 @@ export type UserNameValidationErrorsProp = {
 }[];
 
 export type FormFieldStatusCode = 'neutral' | 'error' | 'success' | 'loading';
+
+export type CreateUserResponse = {
+  success: boolean;
+  message: string;
+};

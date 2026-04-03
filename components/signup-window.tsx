@@ -6,11 +6,16 @@ import {
   checkEmailAvailability,
 } from '@/app/(auth)/signup/actions';
 import { emailSchema, passwordSchema } from '@/lib/zodschemas';
-import { z } from 'zod';
+import { set, z } from 'zod';
 import FormField from '@/components/form-field';
-import { FormFieldStatusCode, UserNameValidationErrorsProp } from '@/lib/types';
+import {
+  CreateUserResponse,
+  FormFieldStatusCode,
+  UserNameValidationErrorsProp,
+} from '@/lib/types';
 import { debounce } from '@/lib/utils';
 import { PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH } from '@/lib/constants';
+import { redirect } from 'next/navigation';
 
 type FormField = {
   status: FormFieldStatusCode;
@@ -22,6 +27,12 @@ const SignupWindow = () => {
     email: '',
     password: '',
   });
+  const [formStatus, setFormStatus] = useState<FormField>({
+    status: 'neutral',
+    message: null,
+  });
+
+  const [isFormBeingSubmitted, setIsFormBeingSubmitted] = useState(false);
 
   const [emailForm, _setEmailForm] = useState<FormField>({
     status: 'neutral',
@@ -122,11 +133,34 @@ const SignupWindow = () => {
     }
   };
 
+  const handleSubmit = async (form: { email: string; password: string }) => {
+    if (!canSubmit) return;
+
+    setIsFormBeingSubmitted(true);
+    setFormStatus({ status: 'neutral', message: null });
+
+    const result: CreateUserResponse = await createUser(form);
+
+    if (!result.success) {
+      setFormStatus({ status: 'error', message: result.message });
+      setIsFormBeingSubmitted(false);
+      return;
+    }
+
+    redirect('/');
+  };
+
   return (
-    <div className='rounded-md p-4 bg-black divide-neutral-900 flex flex-col gap-12'>
-      <h1 className='font-google-sans-flex text-xl text-center'>
-        Create account
-      </h1>
+    <div
+      className={`rounded-md p-4 bg-black divide-neutral-900 flex flex-col gap-12 transition-colors ${formStatus.status === 'error' ? 'border border-red-500' : ''}`}>
+      <div>
+        <h1 className='font-google-sans-flex text-xl text-center'>
+          Create account
+        </h1>
+        <p className='text-center text-sm text-red-500'>
+          {formStatus.message}
+        </p>
+      </div>
 
       <div>
         <FormField status={emailForm.status}>
@@ -161,10 +195,12 @@ const SignupWindow = () => {
       </div>
 
       <Button
-        intent={canSubmit ? 'enabled' : 'disabled'}
-        onClick={() => createUser(form)}
+        intent={
+          isFormBeingSubmitted ? 'loading' : canSubmit ? 'enabled' : 'disabled'
+        }
+        onClick={() => handleSubmit(form)}
         disabled={!canSubmit}>
-        Sign up
+        {isFormBeingSubmitted ? null : 'Create account'}
       </Button>
     </div>
   );

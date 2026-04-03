@@ -9,7 +9,7 @@ const button = cva(
       intent: {
         enabled: 'bg-blue-500 hover:bg-blue-600 text-white cursor-pointer',
         disabled:
-          'bg-neutral-800 text-neutral-400 border border-neutral-600 cursor-not-allowed',
+          'bg-neutral-900 text-neutral-400 border border-neutral-600 cursor-not-allowed',
         loading:
           'bg-blue-500 border border-blue-400 text-white cursor-progress',
       },
