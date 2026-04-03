@@ -33,6 +33,12 @@ const SignupWindow = () => {
   ) => {
     _setEmailForm({ status, message });
   };
+  const [formValidation, setFormValidation] = useState({
+    email: false,
+    password: false,
+  });
+
+  const canSubmit = Object.values(formValidation).every((v) => v);
 
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [passwordHasInput, setPasswordHasInput] = useState(false);
@@ -73,6 +79,7 @@ const SignupWindow = () => {
         } else {
           setEmailForm('success', null);
           setForm((prev) => ({ ...prev, email: value }));
+          setFormValidation((prev) => ({ ...prev, email: true }));
         }
       }
     }, 500),
@@ -81,6 +88,7 @@ const SignupWindow = () => {
   const handleEmail = (e: ChangeEvent<HTMLInputElement>) => {
     setEmailForm('neutral', null);
     if (e.target.value === '') return;
+    setFormValidation((prev) => ({ ...prev, email: false }));
     debouncedValidation.current(e.target.value);
   };
 
@@ -90,13 +98,14 @@ const SignupWindow = () => {
     if (e.target.value === '') {
       setPasswordHasInput(false);
       setPasswordForm('neutral', null);
-      return;
+      setFormValidation((prev) => ({ ...prev, password: false }));
     }
 
     const passwordValidation = passwordSchema.safeParse(e.target.value);
     if (!passwordValidation.success) {
       const zodErrorArray = z.flattenError(passwordValidation.error);
       setPasswordForm('error', null);
+      setFormValidation((prev) => ({ ...prev, password: false }));
       setPasswordErrorList((prev) =>
         prev.map((err) => ({
           ...err,
@@ -109,6 +118,7 @@ const SignupWindow = () => {
         prev.map((err) => ({ ...err, passed: true })),
       );
       setForm((prev) => ({ ...prev, password: e.target.value }));
+      setFormValidation((prev) => ({ ...prev, password: true }));
     }
   };
 
@@ -150,7 +160,12 @@ const SignupWindow = () => {
         </FormField>
       </div>
 
-      <Button onClick={() => createUser(form)}>Create account</Button>
+      <Button
+        intent={canSubmit ? 'enabled' : 'disabled'}
+        onClick={() => createUser(form)}
+        disabled={!canSubmit}>
+        Sign up
+      </Button>
     </div>
   );
 };
