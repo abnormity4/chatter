@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { emailSchema, passwordSchema } from '@/lib/zodschemas';
 import bcrypt from 'bcryptjs';
 import { Prisma } from '@/prisma/generated/prisma/client';
+import { redirect } from 'next/navigation';
 
 export const createUser = async (form: { email: string; password: string }) => {
   const userSchema = z.object({
@@ -16,8 +17,7 @@ export const createUser = async (form: { email: string; password: string }) => {
   if (!validationResult.success) {
     return {
       success: false,
-      message:
-        'Failed to validate request. Error: ' + validationResult.error,
+      message: 'Failed to validate request. Error: ' + validationResult.error,
     };
   }
 
@@ -32,10 +32,6 @@ export const createUser = async (form: { email: string; password: string }) => {
         displayName: displayName,
       },
     });
-    return {
-      success: true,
-      message: `User "${displayName}" created successfully.`,
-    };
   } catch (e) {
     if (e instanceof Prisma.PrismaClientKnownRequestError) {
       if (e.code === 'P2002') {
@@ -45,8 +41,10 @@ export const createUser = async (form: { email: string; password: string }) => {
         };
       }
     }
-    return { success: false, message: 'An unexpected error occurred.' };
+    return { success: false, message: e.message };
   }
+
+  redirect('/onboarding');
 };
 
 export const checkEmailAvailability = async (email: string) => {

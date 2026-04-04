@@ -3,7 +3,7 @@
 import { ChangeEvent, Dispatch, SetStateAction, useState } from 'react';
 import { z } from 'zod';
 import { MULTI_SPACES_REGEX } from '@/lib/constants';
-import UsernameInputValidation from '@/components/username-input-validation';
+import UsernameInputValidation from '@/app/onboarding/components/username-input-validation';
 import { UserNameValidationErrorsProp } from '@/lib/types';
 import { AnimatePresence, motion } from 'framer-motion';
 import { usernameSchema } from '@/lib/zodschemas';

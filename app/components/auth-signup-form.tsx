@@ -1,12 +1,10 @@
+'use client';
 import { ChangeEvent, useRef, useState } from 'react';
 import { Eye } from 'lucide-react';
 import Button from '@/components/button';
-import {
-  createUser,
-  checkEmailAvailability,
-} from '@/app/(auth)/signup/actions';
+import { createUser, checkEmailAvailability } from '@/app/actions';
 import { emailSchema, passwordSchema } from '@/lib/zodschemas';
-import { set, z } from 'zod';
+import { z } from 'zod';
 import FormField from '@/components/form-field';
 import {
   CreateUserResponse,
@@ -22,7 +20,7 @@ type FormField = {
   message: string | null;
 };
 
-const SignupWindow = () => {
+const AuthSignupForm = () => {
   const [form, setForm] = useState({
     email: '',
     password: '',
@@ -107,9 +105,10 @@ const SignupWindow = () => {
     setPasswordHasInput(true);
 
     if (e.target.value === '') {
-      setPasswordHasInput(false);
       setPasswordForm('neutral', null);
+      setPasswordHasInput(false);
       setFormValidation((prev) => ({ ...prev, password: false }));
+      return;
     }
 
     const passwordValidation = passwordSchema.safeParse(e.target.value);
@@ -151,18 +150,17 @@ const SignupWindow = () => {
   };
 
   return (
-    <div
-      className={`rounded-md p-4 bg-black divide-neutral-900 flex flex-col gap-12 transition-colors ${formStatus.status === 'error' ? 'border border-red-500' : ''}`}>
+    <div className={`divide-stone-900 flex flex-col gap-4 transition-colors`}>
       <div>
-        <h1 className='font-google-sans-flex text-xl text-center'>
-          Create account
+        <h1 className='font-google-sans-flex text-xl font-semibold text-center'>
+          Sign up
         </h1>
-        <p className='text-center text-sm text-red-500'>
+        <p className='text-center text-sm text-rose-400'>
           {formStatus.message}
         </p>
       </div>
 
-      <div>
+      <div className='mb-8 space-y-6'>
         <FormField status={emailForm.status}>
           <FormField.Label>Email</FormField.Label>
           <FormField.Input
@@ -186,7 +184,7 @@ const SignupWindow = () => {
             <FormField.Icons>
               <Eye
                 onClick={() => setPasswordVisible((prev) => !prev)}
-                className='size-5 stroke-neutral-500 hover:stroke-neutral-300 cursor-pointer transition-colors'
+                className='size-5 stroke-stone-500 hover:stroke-stone-300 cursor-pointer transition-colors'
               />
             </FormField.Icons>
           </FormField.Input>
@@ -206,4 +204,4 @@ const SignupWindow = () => {
   );
 };
 
-export default SignupWindow;
+export default AuthSignupForm;

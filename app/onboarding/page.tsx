@@ -1,6 +1,6 @@
 import { readdir } from 'fs/promises';
 import path from 'path';
-import SignupPage from '@/app/(auth)/signup/signup-page';
+import OnboardingClient from '@/app/onboarding/onboarding-client';
 
 const validImageExtensions = ['.webp', '.jpg', '.svg', '.png'];
 
@@ -28,10 +28,10 @@ const getAvatars = async () => {
   return files;
 };
 
-const SignupContainer = async () => {
+const OnboardingContainer = async () => {
   const avatarUrls = await getAvatars();
 
-  return <SignupPage avatarUrls={avatarUrls} />;
+  return <OnboardingClient avatarUrls={avatarUrls} />;
 };
 
-export default SignupContainer;
+export default OnboardingContainer;

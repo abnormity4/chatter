@@ -10,6 +10,7 @@
   --color-foreground: var(--foreground);
   --font-google-sans-flex: var(--font-google-sans-flex);
   --font-quicksand: var(--font-quicksand);
+  --font-instrument-sans: var(--font-instrument-sans);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -39,4 +40,31 @@ body {
       --border-angle: 360deg;
     }
   }
+}
+
+.landing-gradient {
+  position: relative;
+  background-color: #ffb999;
+  background-image:
+    radial-gradient(at 5% 20%, hsla(247, 92%, 76%, 1) 0px, transparent 50%),
+    radial-gradient(at 47% 45%, hsla(116, 62%, 78%, 1) 0px, transparent 50%),
+    radial-gradient(at 17% 29%, hsla(146, 78%, 70%, 1) 0px, transparent 50%),
+    radial-gradient(at 28% 19%, hsla(21, 67%, 73%, 1) 0px, transparent 50%),
+    radial-gradient(at 77% 71%, hsla(65, 61%, 78%, 1) 0px, transparent 50%),
+    radial-gradient(at 23% 43%, hsla(160, 74%, 66%, 1) 0px, transparent 50%),
+    radial-gradient(at 21% 53%, hsla(173, 76%, 61%, 1) 0px, transparent 50%);
+  z-index: 0;
+}
+
+.landing-gradient::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  opacity: 0.01;
+  z-index: -1;
+  pointer-events: none;
+  background-image: url('/noise.gif');
 }

@@ -3,15 +3,15 @@ import { ComponentProps } from 'react';
 import CircleSpinnerAnimation from './icons/CircleSpinnerAnimation';
 
 const button = cva(
-  'w-full transition-colors h-9 rounded-md flex items-center justify-center gap-2',
+  'w-full transition-colors h-10 rounded-md flex items-center justify-center gap-2',
   {
     variants: {
       intent: {
-        enabled: 'bg-blue-500 hover:bg-blue-600 text-white cursor-pointer',
+        enabled: 'bg-indigo-500 hover:bg-indigo-400 text-white cursor-pointer',
         disabled:
-          'bg-neutral-900 text-neutral-400 border border-neutral-600 cursor-not-allowed',
+          'bg-stone-900 text-stone-400 border border-stone-600 cursor-not-allowed',
         loading:
-          'bg-blue-500 border border-blue-400 text-white cursor-progress',
+          'bg-indigo-500 border border-indigo-400 text-white cursor-progress',
       },
     },
     defaultVariants: {
