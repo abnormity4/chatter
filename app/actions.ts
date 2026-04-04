@@ -22,7 +22,7 @@ const validateCreateUserForm = (form: AuthForm) => {
 
   if (!validationResult.success) {
     throw new AuthError(
-      ErrorCodes.REGISTRATION_INVALID_CREDENTIALS,
+      ErrorCodes.VALIDATION_ERROR,
       'Failed to validate user credentials. Please ensure the email and password are correct.',
     );
   }
@@ -61,8 +61,9 @@ const attemptCreateUser = async (form: AuthForm) => {
 
 export const createUser = async (form: AuthForm) => {
   try {
-    const user = await attemptCreateUser(form);
-    if (user) return { success: true, message: 'User created successfully.' };
+    await attemptCreateUser(form);
+
+    return { success: true, message: 'User created successfully.' };
   } catch (e) {
     if (e instanceof AuthError) return { success: false, message: e.message };
 
@@ -78,4 +79,49 @@ export const checkEmailAvailability = async (email: string) => {
     where: { email: email },
     select: { email: true },
   });
+};
+
+const attemptLogIn = async (form: AuthForm) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { email: form.email },
+      select: { password: true },
+    });
+
+    if (!user) {
+      throw new AuthError(
+        ErrorCodes.INVALID_CREDENTIALS,
+        'Invalid email or password.',
+      );
+    }
+
+    const passwordMatch = await bcrypt.compare(form.password, user.password);
+
+    if (!passwordMatch) {
+      throw new AuthError(
+        ErrorCodes.INVALID_CREDENTIALS,
+        'Invalid email or password.',
+      );
+    }
+    return true;
+  } catch (e) {
+    throw e;
+  }
+};
+
+export const logIn = async (form: AuthForm) => {
+  try {
+    await attemptLogIn(form);
+
+    return { success: true, message: 'Logged in succesfully' };
+  } catch (e) {
+    if (e instanceof AuthError) {
+      return { success: false, message: e.message };
+    }
+
+    return {
+      success: false,
+      message: 'An unexpected error occurred during login.',
+    };
+  }
 };

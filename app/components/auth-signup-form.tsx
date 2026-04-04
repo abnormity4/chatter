@@ -2,7 +2,7 @@
 import { ChangeEvent, useRef, useState } from 'react';
 import { Eye } from 'lucide-react';
 import Button from '@/components/button';
-import { createUser, checkEmailAvailability } from '@/app/actions';
+import { createUser, checkEmailAvailability, logIn } from '@/app/actions';
 import { emailSchema, passwordSchema } from '@/lib/zodschemas';
 import { z } from 'zod';
 import FormField from '@/components/form-field';
@@ -200,7 +200,7 @@ const AuthSignupForm = () => {
         intent={
           isFormBeingSubmitted ? 'loading' : canSubmit ? 'enabled' : 'disabled'
         }
-        onClick={() => handleSubmit(form)}
+        onClick={() => createUser(form)}
         disabled={!canSubmit}>
         {isFormBeingSubmitted ? null : 'Create account'}
       </Button>
