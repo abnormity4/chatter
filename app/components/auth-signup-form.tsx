@@ -13,7 +13,7 @@ import {
 } from '@/lib/types';
 import { debounce } from '@/lib/utils';
 import { PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH } from '@/lib/constants';
-import { redirect } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 type FormField = {
   status: FormFieldStatusCode;
@@ -48,6 +48,7 @@ const AuthSignupForm = () => {
   });
 
   const canSubmit = Object.values(formValidation).every((v) => v);
+  const router = useRouter();
 
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [passwordHasInput, setPasswordHasInput] = useState(false);
@@ -149,7 +150,7 @@ const AuthSignupForm = () => {
       return;
     }
 
-    redirect('/');
+    router.push('/onboarding');
   };
 
   return (

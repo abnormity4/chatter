@@ -1,0 +1,19 @@
+class AppError extends Error {
+  errorCode: ErrorCodes;
+
+  constructor(errorCode: ErrorCodes, message: string) {
+    super(message);
+    this.errorCode = errorCode;
+  }
+}
+
+export class AuthError extends AppError {
+  constructor(errorCode: ErrorCodes, message: string) {
+    super(errorCode, message);
+  }
+}
+
+export enum ErrorCodes {
+  USER_ALREADY_EXISTS = 1001,
+  REGISTRATION_INVALID_CREDENTIALS = 1002,
+}
