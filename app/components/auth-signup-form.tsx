@@ -96,7 +96,10 @@ const AuthSignupForm = () => {
 
   const handleEmail = (e: ChangeEvent<HTMLInputElement>) => {
     setEmailForm('neutral', null);
-    if (e.target.value === '') return;
+    if (e.target.value === '') {
+      debouncedValidation.current.cancel();
+      return;
+    }
     setFormValidation((prev) => ({ ...prev, email: false }));
     debouncedValidation.current(e.target.value);
   };
