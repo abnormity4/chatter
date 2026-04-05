@@ -4,7 +4,9 @@ import { z } from 'zod';
 import { emailSchema, passwordSchema } from '@/lib/zodschemas';
 import bcrypt from 'bcryptjs';
 import { Prisma } from '@/prisma/generated/prisma/client';
-import { AuthError, ErrorCodes } from '@/exceptions/root';
+import { AuthError, ErrorCodes, RateExceededError } from '@/exceptions/root';
+import { headers } from 'next/headers';
+import { rateLimitByIp } from '@/lib/ratelimit';
 
 type AuthForm = {
   email: string;
@@ -18,7 +20,6 @@ const validateCreateUserForm = (form: AuthForm) => {
   });
 
   const validationResult = userSchema.safeParse(form);
-  console.log(validationResult);
 
   if (!validationResult.success) {
     throw new AuthError(
@@ -60,13 +61,17 @@ const attemptCreateUser = async (form: AuthForm) => {
 };
 
 export const createUser = async (form: AuthForm) => {
+  const ipAddress = (await headers()).get('x-forwarded-for');
+
   try {
+    await rateLimitByIp(ipAddress);
     await attemptCreateUser(form);
 
     return { success: true, message: 'User created successfully.' };
   } catch (e) {
     if (e instanceof AuthError) return { success: false, message: e.message };
-
+    if (e instanceof RateExceededError)
+      return { success: false, message: e.message };
     return {
       success: false,
       message: 'An unexpected error occurred during registration.',

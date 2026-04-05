@@ -200,7 +200,7 @@ const AuthSignupForm = () => {
         intent={
           isFormBeingSubmitted ? 'loading' : canSubmit ? 'enabled' : 'disabled'
         }
-        onClick={() => createUser(form)}
+        onClick={() => handleSubmit(form)}
         disabled={!canSubmit}>
         {isFormBeingSubmitted ? null : 'Create account'}
       </Button>
