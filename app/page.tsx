@@ -1,4 +1,4 @@
-import AuthSignupForm from './components/auth-signup-form';
+import AuthSignupForm from './components/auth-form';
 
 const Landing = () => {
   return (
