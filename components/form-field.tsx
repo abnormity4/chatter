@@ -3,13 +3,14 @@ import { cva } from 'class-variance-authority';
 import SpinnerAnimation from '@/components/icons/SpinnerAnimation';
 import { motion } from 'motion/react';
 import { AnimatePresence } from 'framer-motion';
-import { FormFieldStatusCode, UserNameValidationErrorsProp } from '@/lib/types';
+import { FormFieldValidationProp } from '@/components/form-field-types';
+import { UIState } from '@/lib/types';
 import { Check } from 'lucide-react';
 
 type FormFieldProps = {
-  status: FormFieldStatusCode;
+  status: UIState;
   children: React.ReactNode;
-  errorList?: UserNameValidationErrorsProp;
+  errorList?: FormFieldValidationProp;
 };
 
 type FormFieldContext = {
@@ -57,6 +58,7 @@ const formFieldInput = cva(
       status: {
         neutral:
           'bg-stone-950 border-stone-900 focus:border-stone-800 has-[:focus]:border-stone-800',
+        warning: 'bg-stone-950 border-amber-500',
         error: 'bg-stone-950 border-rose-500',
         success: 'bg-stone-950 border-indigo-500 text-indigo-300',
         loading: 'bg-stone-950 border-stone-400',
@@ -91,6 +93,7 @@ const formFieldMessage = cva('text-xs m-1', {
     status: {
       error: 'text-rose-400',
       success: 'text-indigo-200',
+      warning: 'text-amber-400',
       neutral: '',
       loading: '',
     },

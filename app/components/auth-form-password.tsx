@@ -1,41 +1,23 @@
 import { useState, ChangeEvent } from 'react';
-import { FormFieldStatusCode, UserNameValidationErrorsProp } from '@/lib/types';
+import { FormFieldValidationProp } from '@/components/form-field-types';
 import { PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH } from '@/lib/constants';
 import { passwordSchema } from '@/lib/zodschemas';
 import FormField from '@/components/form-field';
 import { Eye } from 'lucide-react';
 import { z } from 'zod';
+import { useAuthFormContext } from './auth-form';
+import type { FormFieldUIStatus } from './auth-form-types';
 
-type FormField = {
-  status: FormFieldStatusCode;
-  message: string | null;
-};
+const AuthFormPassword = () => {
+  const { setFormData, setFormValidation } = useAuthFormContext();
 
-const AuthFormPassword = ({
-  setForm,
-  setFormValidation,
-}: {
-  setForm: React.Dispatch<
-    React.SetStateAction<{ email: string; password: string }>
-  >;
-  setFormValidation: React.Dispatch<
-    React.SetStateAction<{ email: boolean; password: boolean }>
-  >;
-}) => {
   const [passwordVisible, setPasswordVisible] = useState(false);
-  const [passwordHasInput, setPasswordHasInput] = useState(false);
-  const [passwordForm, _setPasswordForm] = useState<FormField>({
+  const [passwordForm, setPasswordForm] = useState<FormFieldUIStatus>({
     status: 'neutral',
     message: null,
   });
-  const setPasswordForm = (
-    status: FormField['status'],
-    message: FormField['message'],
-  ) => {
-    _setPasswordForm({ status, message });
-  };
   const [passwordErrorList, setPasswordErrorList] =
-    useState<UserNameValidationErrorsProp>([
+    useState<FormFieldValidationProp>([
       {
         id: 'invalid_length',
         message: `Must be at least ${PASSWORD_MIN_LENGTH}-${PASSWORD_MAX_LENGTH} characters long.`,
@@ -48,20 +30,25 @@ const AuthFormPassword = ({
       },
     ]);
 
-  const handlePassword = (e: ChangeEvent<HTMLInputElement>) => {
-    setPasswordHasInput(true);
+  const fieldReset = () => {
+    setPasswordForm({ status: 'neutral', message: null });
+    setFormValidation((prev) => ({ ...prev, password: false }));
+  };
 
-    if (e.target.value === '') {
-      setPasswordForm('neutral', null);
-      setPasswordHasInput(false);
-      setFormValidation((prev) => ({ ...prev, password: false }));
+  const handlePassword = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+
+    if (value === '') {
+      fieldReset();
       return;
     }
 
-    const passwordValidation = passwordSchema.safeParse(e.target.value);
+    setFormData((prev) => ({ ...prev, password: value }));
+
+    const passwordValidation = passwordSchema.safeParse(value);
     if (!passwordValidation.success) {
       const zodErrorArray = z.flattenError(passwordValidation.error);
-      setPasswordForm('error', null);
+      setPasswordForm({ status: 'error', message: null });
       setFormValidation((prev) => ({ ...prev, password: false }));
       setPasswordErrorList((prev) =>
         prev.map((err) => ({
@@ -70,11 +57,10 @@ const AuthFormPassword = ({
         })),
       );
     } else {
-      setPasswordForm('success', null);
+      setPasswordForm({ status: 'success', message: null });
       setPasswordErrorList((prev) =>
         prev.map((err) => ({ ...err, passed: true })),
       );
-      setForm((prev) => ({ ...prev, password: e.target.value }));
       setFormValidation((prev) => ({ ...prev, password: true }));
     }
   };
@@ -94,7 +80,7 @@ const AuthFormPassword = ({
           />
         </FormField.Icons>
       </FormField.Input>
-      {passwordHasInput && <FormField.ValidationList />}
+      <FormField.ValidationList />
     </FormField>
   );
 };

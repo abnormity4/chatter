@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { UserNameValidationErrorsProp } from '@/lib/types';
+import { FormFieldValidationProp } from '@/components/form-field-types';
 import {
   USERAVATAR_DEFAULT_URL,
   USERNAME_MAX_LENGTH,
@@ -21,15 +21,10 @@ const OnboardingClient = ({ avatarUrls }: { avatarUrls: string[] }) => {
   const [avatarWasChanged, setAvatarWasChanged] = useState(false);
 
   const [validationErrors, setValidationErrors] =
-    useState<UserNameValidationErrorsProp>([
+    useState<FormFieldValidationProp>([
       {
-        id: 'too_short',
-        message: `Must be at least ${USERNAME_MIN_LENGTH} characters long`,
-        passed: false,
-      },
-      {
-        id: 'too_long',
-        message: `Must be no more than ${USERNAME_MAX_LENGTH} characters long`,
+        id: 'invalid_length',
+        message: `Must be between ${USERNAME_MIN_LENGTH}-${USERNAME_MAX_LENGTH} characters long.`,
         passed: false,
       },
     ]);
@@ -80,7 +75,7 @@ const OnboardingClient = ({ avatarUrls }: { avatarUrls: string[] }) => {
           )}
         </div>
 
-        <h2 className='[mask-image:radial-gradient(circle_at_center,black_75%,transparent_100%)] text-2xl text-center text-neutral-200 text-shadow-2xs min-h-8 w-full overflow-hidden select-none whitespace-nowrap'>
+        <h2 className='mask-[radial-gradient(circle_at_center,black_75%,transparent_100%)] text-2xl text-center text-neutral-200 text-shadow-2xs min-h-8 w-full overflow-hidden select-none whitespace-nowrap'>
           {username}
         </h2>
 

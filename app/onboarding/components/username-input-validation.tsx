@@ -1,10 +1,10 @@
-import { UserNameValidationErrorsProp } from '@/lib/types';
+import { FormFieldValidationProp } from '@/components/form-field-types';
 import { Check } from 'lucide-react';
 
 const UsernameInputValidation = ({
   validationErrors,
 }: {
-  validationErrors: UserNameValidationErrorsProp;
+  validationErrors: FormFieldValidationProp;
 }) => {
   return (
     <div className='p-2'>

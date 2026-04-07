@@ -1,64 +1,68 @@
 import { useState, useRef, ChangeEvent } from 'react';
 import FormField from '@/components/form-field';
-import { FormFieldStatusCode } from '@/lib/types';
 import { debounce } from '@/lib/utils';
-import { checkEmailAvailability } from '@/app/actions';
 import { emailSchema } from '@/lib/zodschemas';
+import type { FormFieldUIStatus } from './auth-form-types';
+import { useAuthFormContext } from './auth-form';
+import { checkEmailAvailability } from '@/app/actions';
 
-type FormField = {
-  status: FormFieldStatusCode;
-  message: string | null;
-};
+const AuthFormEmail = () => {
+  const { setFormData, setFormValidation } = useAuthFormContext();
 
-const AuthFormEmail = ({
-  setForm,
-  setFormValidation,
-}: {
-  setForm: React.Dispatch<
-    React.SetStateAction<{ email: string; password: string }>
-  >;
-  setFormValidation: React.Dispatch<
-    React.SetStateAction<{ email: boolean; password: boolean }>
-  >;
-}) => {
-  const [emailForm, _setEmailForm] = useState<FormField>({
+  const [emailForm, setEmailForm] = useState<FormFieldUIStatus>({
     status: 'neutral',
     message: null,
   });
-  const setEmailForm = (
-    status: FormField['status'],
-    message: FormField['message'],
-  ) => {
-    _setEmailForm({ status, message });
-  };
 
   const debouncedValidation = useRef(
     debounce(async (value: string) => {
-      const emailValidation = emailSchema.safeParse(value);
-      if (!emailValidation.success) {
-        setEmailForm('error', 'Please enter a valid email address.');
-      } else {
-        setEmailForm('loading', null);
-        const user = await checkEmailAvailability(value);
-        if (!!user) {
-          setEmailForm('error', 'An account with this email already exists.');
-        } else {
-          setEmailForm('success', null);
-          setForm((prev) => ({ ...prev, email: value }));
-          setFormValidation((prev) => ({ ...prev, email: true }));
-        }
+      const validateEmail = emailSchema.safeParse(value);
+
+      if (!validateEmail.success) {
+        setEmailForm({
+          status: 'error',
+          message: 'Please enter a valid email address.',
+        });
+        return;
       }
+
+      setEmailForm({ status: 'loading', message: null });
+
+      const isAlreadyRegistered = await checkEmailAvailability(
+        validateEmail.data,
+      );
+
+      if (isAlreadyRegistered) {
+        setEmailForm({
+          status: 'warning',
+          message: 'An account with this email already exists.',
+        });
+        return;
+      }
+
+      setEmailForm({ status: 'success', message: null });
+      setFormValidation((prev) => ({ ...prev, email: true }));
     }, 500),
   );
 
-  const handleEmail = (e: ChangeEvent<HTMLInputElement>) => {
-    setEmailForm('neutral', null);
-    if (e.target.value === '') {
+  const fieldReset = () => {
+    setEmailForm({ status: 'neutral', message: null });
+    setFormValidation((prev) => ({ ...prev, email: false }));
+  };
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+
+    fieldReset();
+
+    setFormData((prev) => ({ ...prev, email: value }));
+
+    if (value === '') {
       debouncedValidation.current.cancel();
       return;
     }
-    setFormValidation((prev) => ({ ...prev, email: false }));
-    debouncedValidation.current(e.target.value);
+
+    debouncedValidation.current(value);
   };
 
   return (
@@ -68,7 +72,7 @@ const AuthFormEmail = ({
         type='email'
         placeholder='mail@example.com'
         onChange={(e) => {
-          handleEmail(e);
+          handleChange(e);
         }}>
         <FormField.Loader />
       </FormField.Input>

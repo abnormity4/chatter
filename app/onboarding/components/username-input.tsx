@@ -4,7 +4,7 @@ import { ChangeEvent, Dispatch, SetStateAction, useState } from 'react';
 import { z } from 'zod';
 import { MULTI_SPACES_REGEX } from '@/lib/constants';
 import UsernameInputValidation from '@/app/onboarding/components/username-input-validation';
-import { UserNameValidationErrorsProp } from '@/lib/types';
+import { FormFieldValidationProp } from '@/components/form-field-types';
 import { AnimatePresence, motion } from 'framer-motion';
 import { usernameSchema } from '@/lib/zodschemas';
 
@@ -15,8 +15,8 @@ const UsernameInput = ({
   hasNoErrors,
 }: {
   setUsername: Dispatch<SetStateAction<string>>;
-  validationErrors: UserNameValidationErrorsProp;
-  setValidationErrors: Dispatch<SetStateAction<UserNameValidationErrorsProp>>;
+  validationErrors: FormFieldValidationProp;
+  setValidationErrors: Dispatch<SetStateAction<FormFieldValidationProp>>;
   hasNoErrors: boolean;
 }) => {
   const [hadInput, setHadInput] = useState(false);

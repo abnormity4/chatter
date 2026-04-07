@@ -1,25 +1,41 @@
 'use client';
-import { useState } from 'react';
+import { useState, createContext, useContext } from 'react';
 import Button from '@/components/button';
 import { createUser } from '@/app/actions';
-import FormField from '@/components/form-field';
-import { CreateUserResponse, FormFieldStatusCode } from '@/lib/types';
-
+import type { FormFieldUIStatus, AuthServerResponse } from './auth-form-types';
 import { useRouter } from 'next/navigation';
 import AuthFormEmail from './auth-form-email';
 import AuthFormPassword from './auth-form-password';
 
-type FormField = {
-  status: FormFieldStatusCode;
-  message: string | null;
+const AuthFormContext = createContext<
+  | {
+      formData: { email: string; password: string };
+      setFormData: React.Dispatch<
+        React.SetStateAction<{ email: string; password: string }>
+      >;
+      setFormValidation: React.Dispatch<
+        React.SetStateAction<{ email: boolean; password: boolean }>
+      >;
+    }
+  | undefined
+>(undefined);
+
+export const useAuthFormContext = () => {
+  const context = useContext(AuthFormContext);
+  if (!context) {
+    throw new Error(
+      'useAuthFormContext must be used within an AuthFormContextProvider',
+    );
+  }
+  return context;
 };
 
-const AuthSignupForm = () => {
-  const [form, setForm] = useState({
+const AuthForm = () => {
+  const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
-  const [formStatus, setFormStatus] = useState<FormField>({
+  const [formStatus, setFormStatus] = useState<FormFieldUIStatus>({
     status: 'neutral',
     message: null,
   });
@@ -40,7 +56,7 @@ const AuthSignupForm = () => {
     setIsBeingSubmitted(true);
     setFormStatus({ status: 'neutral', message: null });
 
-    const result: CreateUserResponse = await createUser(form);
+    const result: AuthServerResponse = await createUser(form);
 
     if (!result.success) {
       setFormStatus({ status: 'error', message: result.message });
@@ -52,38 +68,33 @@ const AuthSignupForm = () => {
   };
 
   return (
-    <div className={`divide-stone-900 flex flex-col gap-4 transition-colors`}>
-      <div>
-        <h1 className='font-google-sans-flex text-xl font-semibold text-center'>
-          Sign up
-        </h1>
-        <p className='text-center text-sm text-rose-400'>
-          {formStatus.message}
-        </p>
+    <AuthFormContext value={{ formData, setFormData, setFormValidation }}>
+      <div className={`divide-stone-900 flex flex-col gap-4 transition-colors`}>
+        <div>
+          <h1 className='font-google-sans-flex text-xl font-semibold text-center'>
+            Sign up
+          </h1>
+          <p className='text-center text-sm text-rose-400'>
+            {formStatus.message}
+          </p>
+        </div>
+
+        <div className='mb-8 space-y-6'>
+          <AuthFormEmail />
+          <AuthFormPassword />
+        </div>
+
+        <Button
+          intent={
+            isBeingSubmitted ? 'loading' : canSubmit ? 'enabled' : 'disabled'
+          }
+          onClick={() => handleSubmit(formData)}
+          disabled={!canSubmit}>
+          {isBeingSubmitted ? null : 'Create account'}
+        </Button>
       </div>
-
-      <div className='mb-8 space-y-6'>
-        <AuthFormEmail
-          setForm={setForm}
-          setFormValidation={setFormValidation}
-        />
-
-        <AuthFormPassword
-          setForm={setForm}
-          setFormValidation={setFormValidation}
-        />
-      </div>
-
-      <Button
-        intent={
-          isBeingSubmitted ? 'loading' : canSubmit ? 'enabled' : 'disabled'
-        }
-        onClick={() => handleSubmit(form)}
-        disabled={!canSubmit}>
-        {isBeingSubmitted ? null : 'Create account'}
-      </Button>
-    </div>
+    </AuthFormContext>
   );
 };
 
-export default AuthSignupForm;
+export default AuthForm;

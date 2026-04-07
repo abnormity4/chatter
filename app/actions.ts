@@ -81,7 +81,7 @@ export const createUser = async (form: AuthForm) => {
 
 export const checkEmailAvailability = async (email: string) => {
   return prisma.user.findUnique({
-    where: { email: email },
+    where: { email },
     select: { email: true },
   });
 };
