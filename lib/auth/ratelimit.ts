@@ -21,7 +21,6 @@ export const rateLimitByIp = async (ip: string | null) => {
   const currentCount = await redis.incr(rateLimitKey);
 
   if (currentCount >= AUTH_RATELIMIT_MAX_REQUESTS) {
-    console.log('We will block you from now on for 15 minutes');
     await redis.setEx(blockKey, AUTH_RATELIMIT_TTL, '1');
     await redis.expire(rateLimitKey, AUTH_RATELIMIT_TTL);
   }

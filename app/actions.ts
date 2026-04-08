@@ -118,14 +118,17 @@ const attemptLogIn = async (form: AuthForm) => {
 };
 
 export const logIn = async (form: AuthForm) => {
+  const ipAddress = (await headers()).get('x-forwarded-for');
+
   try {
+    await rateLimitByIp(ipAddress);
     await attemptLogIn(form);
 
     return { success: true, message: 'Logged in succesfully' };
   } catch (e) {
-    if (e instanceof AuthError) {
+    if (e instanceof AuthError) return { success: false, message: e.message };
+    if (e instanceof RateExceededError)
       return { success: false, message: e.message };
-    }
 
     return {
       success: false,

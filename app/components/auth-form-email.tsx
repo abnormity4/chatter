@@ -7,53 +7,68 @@ import { useAuthFormContext } from './auth-form';
 import { checkEmailAvailability } from '@/app/actions';
 
 const AuthFormEmail = () => {
-  const { setFormData, setFormValidation } = useAuthFormContext();
+  const { setFormData, setFormValidation, formMode } = useAuthFormContext();
 
   const [emailForm, setEmailForm] = useState<FormFieldUIStatus>({
     status: 'neutral',
     message: null,
   });
 
-  const debouncedValidation = useRef(
-    debounce(async (value: string) => {
-      const validateEmail = emailSchema.safeParse(value);
-
-      if (!validateEmail.success) {
-        setEmailForm({
-          status: 'error',
-          message: 'Please enter a valid email address.',
-        });
-        return;
-      }
-
-      setEmailForm({ status: 'loading', message: null });
-
-      const isAlreadyRegistered = await checkEmailAvailability(
-        validateEmail.data,
-      );
-
-      if (isAlreadyRegistered) {
-        setEmailForm({
-          status: 'warning',
-          message: 'An account with this email already exists.',
-        });
-        return;
-      }
-
-      setEmailForm({ status: 'success', message: null });
-      setFormValidation((prev) => ({ ...prev, email: true }));
-    }, 500),
-  );
-
-  const fieldReset = () => {
+  const resetValidationState = () => {
     setEmailForm({ status: 'neutral', message: null });
     setFormValidation((prev) => ({ ...prev, email: false }));
   };
 
+  const validateEmail = (value: string) => {
+    const validationResult = emailSchema.safeParse(value);
+    if (!validationResult.success) {
+      setEmailForm({
+        status: 'error',
+        message: 'Please enter a valid email address.',
+      });
+      return false;
+    }
+    return validationResult.data;
+  };
+
+  const validateEmailAvailability = async (email: string) => {
+    setEmailForm({ status: 'loading', message: null });
+
+    const isAlreadyRegistered = await checkEmailAvailability(email);
+
+    if (isAlreadyRegistered) {
+      setEmailForm({
+        status: 'error',
+        message: 'An account with this email already exists.',
+      });
+      return false;
+    }
+    return true;
+  };
+
+  const markAsValid = () => {
+    setEmailForm({ status: 'success', message: null });
+    setFormValidation((prev) => ({ ...prev, email: true }));
+  };
+
+  const debouncedValidation = useRef(
+    debounce(async (value: string) => {
+      const validatedEmail = validateEmail(value);
+      if (!validatedEmail) return;
+
+      if (formMode === 'signup') {
+        const isAvailable = await validateEmailAvailability(validatedEmail);
+        if (!isAvailable) return;
+      }
+
+      markAsValid();
+    }, 500),
+  );
+
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
 
-    fieldReset();
+    resetValidationState();
 
     setFormData((prev) => ({ ...prev, email: value }));
 

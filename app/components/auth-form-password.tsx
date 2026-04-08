@@ -3,7 +3,7 @@ import { FormFieldValidationProp } from '@/components/form-field-types';
 import { PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH } from '@/lib/constants';
 import { passwordSchema } from '@/lib/zodschemas';
 import FormField from '@/components/form-field';
-import { Eye } from 'lucide-react';
+import { Eye, EyeOff } from 'lucide-react';
 import { z } from 'zod';
 import { useAuthFormContext } from './auth-form';
 import type { FormFieldUIStatus } from './auth-form-types';
@@ -66,18 +66,21 @@ const AuthFormPassword = () => {
     }
   };
 
+  const PasswordVisibilityIcon = passwordVisible ? EyeOff : Eye;
+
   return (
     <FormField status={passwordForm.status} errorList={passwordErrorList}>
       <FormField.Label>Password</FormField.Label>
       <FormField.Input
         type={passwordVisible ? 'text' : 'password'}
+        placeholder='••••••••••'
         onChange={(e) => {
           handlePassword(e);
         }}>
         <FormField.Icons>
-          <Eye
+          <PasswordVisibilityIcon
             onClick={() => setPasswordVisible((prev) => !prev)}
-            className='size-5 stroke-stone-500 hover:stroke-stone-300 cursor-pointer transition-colors'
+            className='size-5 stroke-neutral-800 hover:stroke-neutral-600 cursor-pointer transition-colors'
           />
         </FormField.Icons>
       </FormField.Input>

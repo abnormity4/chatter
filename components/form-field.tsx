@@ -46,22 +46,24 @@ FormField.Label = function FormFieldLabelContent({
   const { id } = useFormFieldContext();
   return (
     <label htmlFor={id}>
-      <p className='m-1 text-sm'>{children}</p>
+      <p className='m-1 text-xs text-neutral-700 font-sans font-semibold leading-none'>
+        {children}
+      </p>
     </label>
   );
 };
 
 const formFieldInput = cva(
-  'px-3 border h-9 rounded-lg text-sm font-light transition-colors outline-none flex items-center overflow-hidden',
+  'px-3 border h-9 bg-neutral-600/20 rounded-lg backdrop-blur-md text-sm font-light transition-colors outline-none flex items-center overflow-hidden',
   {
     variants: {
       status: {
         neutral:
-          'bg-stone-950 border-stone-900 focus:border-stone-800 has-[:focus]:border-stone-800',
-        warning: 'bg-stone-950 border-amber-500',
-        error: 'bg-stone-950 border-rose-500',
-        success: 'bg-stone-950 border-indigo-500 text-indigo-300',
-        loading: 'bg-stone-950 border-stone-400',
+          'border-neutral-900 focus:border-neutral-800 has-[:focus]:border-neutral-800',
+        warning: 'border-yellow-600',
+        error: 'border-red-600',
+        success: 'border-sky-600',
+        loading: 'border-neutral-500',
       },
     },
     defaultVariants: {
@@ -79,7 +81,7 @@ FormField.Input = function FormFieldInput({
   return (
     <div className={formFieldInput({ status })}>
       <input
-        className='w-full focus:outline-none group mask-[radial-gradient(circle_at_left,black_80%,transparent_100%)]'
+        className='text-neutral-800 w-full focus:outline-none group mask-[radial-gradient(circle_at_left,black_80%,transparent_100%)]'
         {...props}
         id={id}
       />
@@ -91,9 +93,9 @@ FormField.Input = function FormFieldInput({
 const formFieldMessage = cva('text-xs m-1', {
   variants: {
     status: {
-      error: 'text-rose-400',
-      success: 'text-indigo-200',
-      warning: 'text-amber-400',
+      error: 'text-red-600',
+      success: 'text-sky-600',
+      warning: 'text-yellow-600',
       neutral: '',
       loading: '',
     },
@@ -135,7 +137,7 @@ FormField.Loader = function FormFieldLoader() {
   if (status !== 'loading') return null;
 
   return (
-    <div className='h-full w-5 flex items-center text-stone-500'>
+    <div className='h-full w-5 flex items-center text-neutral-800'>
       <SpinnerAnimation />
     </div>
   );
@@ -149,12 +151,12 @@ FormField.ValidationList = function FormFieldValidationList() {
     <motion.div
       initial={{ opacity: 0, y: -5 }}
       animate={{ opacity: 1, y: 0 }}
-      className='absolute p-2'>
+      className='absolute pl-3 pt-2'>
       <ul className='space-y-1'>
         {errorList.map((err) => (
           <li
             key={err.id}
-            className={`relative text-[12px] leading-3 transition-colors ${!err.passed ? 'text-stone-300' : 'text-stone-100'} select-none`}>
+            className={`relative text-[12px] leading-3 transition-colors ${!err.passed ? 'text-neutral-500' : 'text-neutral-800'} select-none`}>
             {err.passed && <Check className='absolute -left-3 size-3' />}
             {err.message}
           </li>
