@@ -1,5 +1,5 @@
-import redis from './redis';
-import { AUTH_RATELIMIT_MAX_REQUESTS, AUTH_RATELIMIT_TTL } from './constants';
+import redis from '../redis';
+import { AUTH_RATELIMIT_MAX_REQUESTS, AUTH_RATELIMIT_TTL } from '../constants';
 import { RateExceededError, ErrorCodes } from '@/exceptions/root';
 
 export const rateLimitByIp = async (ip: string | null) => {

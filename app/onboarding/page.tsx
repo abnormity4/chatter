@@ -1,6 +1,8 @@
 import { readdir } from 'fs/promises';
 import path from 'path';
 import OnboardingClient from '@/app/onboarding/onboarding-client';
+import { validateSession } from '@/lib/auth/sessions';
+import { redirect } from 'next/navigation';
 
 const validImageExtensions = ['.webp', '.jpg', '.svg', '.png'];
 
@@ -29,6 +31,12 @@ const getAvatars = async () => {
 };
 
 const OnboardingContainer = async () => {
+  const sessionCheck = await validateSession();
+
+  if (!sessionCheck) {
+    redirect('/');
+  }
+
   const avatarUrls = await getAvatars();
 
   return <OnboardingClient avatarUrls={avatarUrls} />;

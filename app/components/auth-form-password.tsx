@@ -9,7 +9,7 @@ import { useAuthFormContext } from './auth-form';
 import type { FormFieldUIStatus } from './auth-form-types';
 
 const AuthFormPassword = () => {
-  const { setFormData, setFormValidation } = useAuthFormContext();
+  const { formData, setFormData, setFormValidation } = useAuthFormContext();
 
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [passwordForm, setPasswordForm] = useState<FormFieldUIStatus>({
@@ -33,6 +33,7 @@ const AuthFormPassword = () => {
   const fieldReset = () => {
     setPasswordForm({ status: 'neutral', message: null });
     setFormValidation((prev) => ({ ...prev, password: false }));
+    setFormData((prev) => ({ ...prev, password: '' }));
   };
 
   const handlePassword = (e: ChangeEvent<HTMLInputElement>) => {
@@ -80,7 +81,7 @@ const AuthFormPassword = () => {
           />
         </FormField.Icons>
       </FormField.Input>
-      <FormField.ValidationList />
+      {formData.password !== '' && <FormField.ValidationList />}
     </FormField>
   );
 };

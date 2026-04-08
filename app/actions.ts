@@ -6,7 +6,9 @@ import bcrypt from 'bcryptjs';
 import { Prisma } from '@/prisma/generated/prisma/client';
 import { AuthError, ErrorCodes, RateExceededError } from '@/exceptions/root';
 import { headers } from 'next/headers';
-import { rateLimitByIp } from '@/lib/ratelimit';
+import { rateLimitByIp } from '@/lib/auth/ratelimit';
+import { createSessionCookie } from '@/lib/auth/sessions';
+import { redirect } from 'next/navigation';
 
 type AuthForm = {
   email: string;
@@ -66,6 +68,7 @@ export const createUser = async (form: AuthForm) => {
   try {
     await rateLimitByIp(ipAddress);
     await attemptCreateUser(form);
+    await createSessionCookie();
 
     return { success: true, message: 'User created successfully.' };
   } catch (e) {
