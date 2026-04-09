@@ -7,8 +7,7 @@ import { Prisma } from '@/prisma/generated/prisma/client';
 import { AuthError, ErrorCodes, RateExceededError } from '@/exceptions/root';
 import { headers } from 'next/headers';
 import { rateLimitByIp } from '@/lib/auth/ratelimit';
-import { createSessionCookie } from '@/lib/auth/sessions';
-import { redirect } from 'next/navigation';
+import { createSession } from '@/lib/auth/sessions';
 
 type AuthForm = {
   email: string;
@@ -40,14 +39,14 @@ const attemptCreateUser = async (form: AuthForm) => {
   const displayName = userCredentials.data.email.split('@')[0];
 
   try {
-    await prisma.user.create({
+    const user = await prisma.user.create({
       data: {
         email: userCredentials.data.email,
         password: hash,
         displayName: displayName,
       },
     });
-    return true;
+    return user.id;
   } catch (e) {
     if (
       e instanceof Prisma.PrismaClientKnownRequestError &&
@@ -64,11 +63,12 @@ const attemptCreateUser = async (form: AuthForm) => {
 
 export const createUser = async (form: AuthForm) => {
   const ipAddress = (await headers()).get('x-forwarded-for');
+  const userAgent = (await headers()).get('user-agent');
 
   try {
     await rateLimitByIp(ipAddress);
-    await attemptCreateUser(form);
-    await createSessionCookie();
+    const userId = await attemptCreateUser(form);
+    await createSession({ ipAddress, userAgent, userId });
 
     return { success: true, message: 'User created successfully.' };
   } catch (e) {
@@ -93,7 +93,7 @@ const attemptLogIn = async (form: AuthForm) => {
   try {
     const user = await prisma.user.findUnique({
       where: { email: form.email },
-      select: { password: true },
+      select: { password: true, id: true },
     });
 
     if (!user) {
@@ -111,7 +111,7 @@ const attemptLogIn = async (form: AuthForm) => {
         'Invalid email or password.',
       );
     }
-    return true;
+    return user.id;
   } catch (e) {
     throw e;
   }
@@ -119,12 +119,15 @@ const attemptLogIn = async (form: AuthForm) => {
 
 export const logIn = async (form: AuthForm) => {
   const ipAddress = (await headers()).get('x-forwarded-for');
+  const userAgent = (await headers()).get('user-agent');
 
   try {
     await rateLimitByIp(ipAddress);
-    await attemptLogIn(form);
+    const user = await attemptLogIn(form);
 
-    return { success: true, message: 'Logged in succesfully' };
+    await createSession({ ipAddress, userAgent, userId: user });
+
+    return { success: true, message: `Logged in successfully as ${user}` };
   } catch (e) {
     if (e instanceof AuthError) return { success: false, message: e.message };
     if (e instanceof RateExceededError)

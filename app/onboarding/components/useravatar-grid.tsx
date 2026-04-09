@@ -1,6 +1,5 @@
 import Image from 'next/image';
 import { Dispatch, SetStateAction, useState } from 'react';
-import { X } from 'lucide-react';
 import { USERAVATAR_DEFAULT_URL } from '@/lib/constants';
 import OverlayCloseButton from '@/app/onboarding/components/overlay-close-button';
 

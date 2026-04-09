@@ -20,8 +20,14 @@ export const rateLimitByIp = async (ip: string | null) => {
 
   const currentCount = await redis.incr(rateLimitKey);
 
+  if (currentCount === 1) {
+    await redis.expire(rateLimitKey, AUTH_RATELIMIT_TTL);
+  }
+
   if (currentCount >= AUTH_RATELIMIT_MAX_REQUESTS) {
     await redis.setEx(blockKey, AUTH_RATELIMIT_TTL, '1');
     await redis.expire(rateLimitKey, AUTH_RATELIMIT_TTL);
   }
 };
+
+//TODO: Switch to a sliding window
