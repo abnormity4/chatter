@@ -1,3 +1,17 @@
+import { UIState } from '@/lib/types';
+
+export type FormFieldProps = {
+  status?: UIState;
+  children: React.ReactNode;
+  errorList?: FormFieldValidationProp;
+};
+
+export type FormFieldContextType = {
+  id: string;
+  status?: FormFieldProps['status'];
+  errorList?: FormFieldProps['errorList'];
+};
+
 export type FormFieldValidationErrorCode =
   | 'invalid_length'
   | 'not_enough_unique_characters'

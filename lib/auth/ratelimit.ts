@@ -29,5 +29,3 @@ export const rateLimitByIp = async (ip: string | null) => {
     await redis.expire(rateLimitKey, AUTH_RATELIMIT_TTL);
   }
 };
-
-//TODO: Switch to a sliding window

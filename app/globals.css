@@ -13,6 +13,32 @@
   --font-instrument-sans: var(--font-instrument-sans);
 }
 
+@theme {
+  --color-seagreen-50: #ebfef5;
+  --color-seagreen-100: #d0fbe5;
+  --color-seagreen-200: #a4f6d1;
+  --color-seagreen-300: #78edc0;
+  --color-seagreen-400: #2fd89c;
+  --color-seagreen-500: #0abf85;
+  --color-seagreen-600: #009b6d;
+  --color-seagreen-700: #007c5a;
+  --color-seagreen-800: #036248;
+  --color-seagreen-900: #04503d;
+  --color-seagreen-950: #012d23;
+
+  --color-seared-50: #fdf3f3;
+  --color-seared-100: #fce4e4;
+  --color-seared-200: #facece;
+  --color-seared-300: #f5acac;
+  --color-seared-400: #ed7c7c;
+  --color-seared-500: #e35f5f;
+  --color-seared-600: #cd3535;
+  --color-seared-700: #ac2929;
+  --color-seared-800: #8f2525;
+  --color-seared-900: #772525;
+  --color-seared-950: #400f0f;
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
@@ -57,6 +83,33 @@ body {
 }
 
 .landing-gradient::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  opacity: 0.01;
+  z-index: -1;
+  pointer-events: none;
+  background-image: url('/noise.gif');
+}
+
+.onboarding-gradient {
+  position: relative;
+  background-color: hsla(0, 0%, 0%, 1);
+  background-image:
+    radial-gradient(at 16% 100%, hsla(0, 70%, 63%, 0.5) 0px, transparent 50%),
+    radial-gradient(at 54% 100%, hsla(0, 70%, 63%, 0.5) 0px, transparent 50%),
+    radial-gradient(at 84% 100%, hsla(0, 70%, 63%, 0.5) 0px, transparent 50%),
+    radial-gradient(at 95% 83%, hsla(157, 77%, 70%, 0.6) 0px, transparent 50%),
+    radial-gradient(at 16% 65%, hsla(157, 77%, 70%, 0.6) 0px, transparent 50%),
+    radial-gradient(at 50% 67%, hsla(157, 77%, 70%, 0.6) 0px, transparent 50%),
+    radial-gradient(at 86% 67%, hsla(157, 77%, 70%, 0.6) 0px, transparent 50%),
+    radial-gradient(at 1% 83%, hsla(157, 77%, 70%, 0.6) 0px, transparent 50%);
+}
+
+.onboarding-gradient::before {
   content: '';
   position: absolute;
   top: 0;

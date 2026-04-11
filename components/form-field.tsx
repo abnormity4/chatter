@@ -6,20 +6,13 @@ import { AnimatePresence } from 'framer-motion';
 import { FormFieldValidationProp } from '@/components/form-field-types';
 import { UIState } from '@/lib/types';
 import { Check } from 'lucide-react';
-
-type FormFieldProps = {
-  status: UIState;
-  children: React.ReactNode;
-  errorList?: FormFieldValidationProp;
-};
-
-type FormFieldContext = {
-  id: string;
-  status: FormFieldProps['status'];
-  errorList?: FormFieldProps['errorList'];
-};
-
-const FormFieldContext = createContext<FormFieldContext | undefined>(undefined);
+import {
+  FormFieldContextType,
+  FormFieldProps,
+} from '@/components/form-field-types';
+const FormFieldContext = createContext<FormFieldContextType | undefined>(
+  undefined,
+);
 
 const useFormFieldContext = () => {
   const context = useContext(FormFieldContext);
@@ -145,6 +138,7 @@ FormField.Loader = function FormFieldLoader() {
 
 FormField.ValidationList = function FormFieldValidationList() {
   const { errorList } = useFormFieldContext();
+
   if (!errorList) return null;
 
   return (

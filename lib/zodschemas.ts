@@ -1,15 +1,5 @@
-import {
-  PASSWORD_MIN_LENGTH,
-  PASSWORD_MAX_LENGTH,
-  USERNAME_MAX_LENGTH,
-  USERNAME_MIN_LENGTH,
-} from '@/lib/constants';
+import { PASSWORD_MIN_LENGTH, PASSWORD_MAX_LENGTH } from '@/lib/constants';
 import { z } from 'zod';
-
-export const usernameSchema = z
-  .string()
-  .min(USERNAME_MIN_LENGTH, 'invalid_length')
-  .max(USERNAME_MAX_LENGTH, 'invalid_length');
 
 export const emailSchema = z
   .string()

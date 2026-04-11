@@ -161,5 +161,3 @@ const AuthForm = () => {
 };
 
 export default AuthForm;
-
-//TODO: Refactor this component

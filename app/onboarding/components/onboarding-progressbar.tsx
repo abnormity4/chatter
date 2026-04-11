@@ -1,17 +1,21 @@
 import { motion } from 'motion/react';
 
-const ProgressBar = ({
+const OnboardingProgressBar = ({
   value,
   maxValue,
+  color,
+  bgColor,
 }: {
   value: number;
   maxValue: number;
+  color: string;
+  bgColor: string;
 }) => {
   return (
     <div className='w-full'>
-      <div className='h-1.5 w-full bg-neutral-900 border border-neutral-800 rounded-md overflow-hidden'>
+      <div className={`h-1.5 w-full ${bgColor} overflow-hidden`}>
         <motion.div
-          className='h-full rounded-md bg-blue-400'
+          className={`h-full ${color}`}
           initial={{ width: 0 }}
           animate={{ width: `${(value / maxValue) * 100}%` }}
           transition={{ duration: 0.3 }}
@@ -21,4 +25,4 @@ const ProgressBar = ({
   );
 };
 
-export default ProgressBar;
+export default OnboardingProgressBar;
