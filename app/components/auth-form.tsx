@@ -102,14 +102,14 @@ const AuthForm = () => {
     <AuthFormContext
       value={{ formData, formMode, setFormData, setFormValidation }}>
       <div
-        className={`flex w-[45%] flex-col rounded-xl bg-white/10 backdrop-blur-md p-8 border border-white/20 shadow-2xl`}>
+        className={`flex w-[45%] flex-col rounded-xl bg-white/5 backdrop-blur-md p-8 border border-white/20 shadow-2xl`}>
         <motion.div
           key={formMode}
           initial={{ opacity: 0, x: -10 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.4 }}>
           <div>
-            <h1 className='font-google-sans-flex text-xl text-neutral-600 mb-1 font-semibold text-center'>
+            <h1 className='font-google-sans-flex text-xl text-white mb-1 font-semibold text-center'>
               {formMode === 'signup' ? 'Sign up' : 'Login'}
             </h1>
             <p className='text-center text-xs text-red-500'>
@@ -139,7 +139,7 @@ const AuthForm = () => {
                 : 'Log in'}
           </AuthFormButton>
 
-          <p className='text-sm text-center text-neutral-600 mt-4'>
+          <p className='text-sm text-center mt-4'>
             {formMode === 'signup'
               ? 'Already have an account?'
               : "Don't have an account?"}
@@ -149,7 +149,7 @@ const AuthForm = () => {
                 setFormMode((prev) => (prev === 'signup' ? 'login' : 'signup'));
                 formReset();
               }}
-              className='text-neutral-700 font-bold hover:border-b hover:border-neutral-700 cursor-pointer'>
+              className='text-seared-300 font-bold hover:border-b hover:border-seagreen-200 cursor-pointer'>
               {' '}
               {formMode === 'signup' ? 'Log in' : 'Sign up'}
             </span>

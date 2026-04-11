@@ -28,10 +28,10 @@ const OnboardingNextButton = ({ className }: ComponentProps<'div'>) => {
   };
 
   const buttonStyle =
-    'flex items-center text-neutral-500 hover:text-neutral-200 transition-colors cursor-pointer select-none';
+    'flex items-center text-white/80 hover:text-white text-lg transition-colors cursor-pointer select-none';
 
   return (
-    <div className={`flex justify-between w-full ${className}`}>
+    <div className={`flex justify-between px-12 ${className}`}>
       {!isFirstStep && (
         <button className={buttonStyle} onClick={goToPreviousStep}>
           <ChevronLeft className='size-5' />
@@ -39,7 +39,7 @@ const OnboardingNextButton = ({ className }: ComponentProps<'div'>) => {
         </button>
       )}
 
-      <button className={buttonStyle} onClick={goToNextStep}>
+      <button className={`${buttonStyle} justify-self-end`} onClick={goToNextStep}>
         <p>{isLastStep ? 'Finish onboarding' : 'Next'}</p>
         <ChevronRight className='size-5' />
       </button>

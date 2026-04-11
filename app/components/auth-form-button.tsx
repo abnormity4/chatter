@@ -8,7 +8,7 @@ const button = cva(
     variants: {
       intent: {
         enabled:
-          'bg-neutral-800/90 hover:bg-neutral-700/90 text-white border border-neutral-900 cursor-pointer',
+          'bg-white text-black/70 cursor-pointer',
         disabled:
           'bg-white/20 border border-neutral-900/20 hover:bg-white/40 text-black/30 cursor-not-allowed',
         loading:

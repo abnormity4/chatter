@@ -73,14 +73,14 @@ const AuthFormPassword = () => {
       <FormField.Label>Password</FormField.Label>
       <FormField.Input
         type={passwordVisible ? 'text' : 'password'}
-        placeholder='••••••••••'
+        placeholder={passwordVisible ? 'password321%!@' : '••••••••••'}
         onChange={(e) => {
           handlePassword(e);
         }}>
         <FormField.Icons>
           <PasswordVisibilityIcon
             onClick={() => setPasswordVisible((prev) => !prev)}
-            className='size-5 stroke-neutral-800 hover:stroke-neutral-600 cursor-pointer transition-colors'
+            className='size-5 cursor-pointer transition-colors'
           />
         </FormField.Icons>
       </FormField.Input>

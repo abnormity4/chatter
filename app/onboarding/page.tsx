@@ -8,7 +8,7 @@ import { OnboardingContextType } from './onboarding-types';
 import OnboardingUsernameStep from './components/steps/onboarding-username-step';
 import OnboardingUserAvatarStep from './components/steps/onboarding-useravatar-step';
 import OnboardingNextButton from './components/onboarding-next-button';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 
 const OnboardingContext = createContext<OnboardingContextType | undefined>(
   undefined,
@@ -75,23 +75,25 @@ const OnboardingPage = ({ avatarUrls }: { avatarUrls: string[] }) => {
         currentStepIndex,
         setCurrentStepIndex,
       }}>
-      <main className='w-1/3 border-r border-l border-neutral-800 relative h-screen bg-white/5 dark:bg-black/20 backdrop-blur-xl sm:items-start'>
-        <div>
+      <main className='w-1/3 border-r border-l relative h-screen dark:bg-black/20 sm:items-start bg-white/5 backdrop-blur-xl border border-white/20 overflow-hidden'>
+        <div className='mb-12'>
           <OnboardingProgressBar
-            value={0.2}
-            maxValue={2}
+            value={currentStepIndex === 0 ? 0.2 : currentStepIndex}
+            maxValue={steps.length}
             color='bg-seagreen-400/80'
             bgColor='bg-neutral-900/50'
           />
         </div>
 
-        <div className='absolute -left-24 top-4 cursor-pointer text-[16px] text-white/30 hover:text-white/80 transition-colors'>
+        <div className='absolute -left-24 top-4 cursor-pointer text-[16px] text-white/80 hover:text-white/80 transition-colors'>
           <span>Log out</span>
           <SquareArrowRightExit className='inline-block ml-1 size-4' />
         </div>
 
-        <div className='p-16 grid grid-[30%_50%_20%] h-full'>
-          <OnboardingUserAvatar />
+        <div className='grid grid-rows-[35%_45%_20%] h-full'>
+          <div className='justify-center'>
+            <OnboardingUserAvatar />
+          </div>
           <motion.div
             key={currentStepIndex}
             initial={{ opacity: 0, x: -10 }}
@@ -100,7 +102,9 @@ const OnboardingPage = ({ avatarUrls }: { avatarUrls: string[] }) => {
             className='px-24'>
             <CurrentStepComponent />
           </motion.div>
-          {isCurrentStepCompleted && <OnboardingNextButton />}
+          <div className='h-fit'>
+            {isCurrentStepCompleted && <OnboardingNextButton />}
+          </div>
         </div>
       </main>
     </OnboardingContext>
@@ -108,3 +112,5 @@ const OnboardingPage = ({ avatarUrls }: { avatarUrls: string[] }) => {
 };
 
 export default OnboardingPage;
+
+//TODO: expand when chat creating are added

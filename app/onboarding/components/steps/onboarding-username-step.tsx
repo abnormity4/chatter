@@ -59,13 +59,15 @@ const OnboardingUsernameStep = () => {
   };
 
   return (
-    <FormField errorList={validationErrors}>
-      <FormField.Input
-        placeholder='Your username...'
-        onChange={(e) => handleChange(e.target.value)}
-      />
-      {hadInput && <FormField.ValidationList />}
-    </FormField>
+    <div className='w-64'>
+      <FormField errorList={validationErrors}>
+        <FormField.Input
+          placeholder='Your username...'
+          onChange={(e) => handleChange(e.target.value)}
+        />
+        {hadInput && <FormField.ValidationList />}
+      </FormField>
+    </div>
   );
 };
 

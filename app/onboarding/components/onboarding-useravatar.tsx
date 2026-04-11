@@ -8,7 +8,7 @@ const OnboardingUserAvatar = () => {
   const { onboardingData, setOnboardingData, avatarWasChanged } =
     useOnboardingContext();
   return (
-    <div className='flex flex-col gap-3 items-center px-16 pt-16 pb-6 overflow-hidden'>
+    <div className='flex flex-col gap-3 items-center overflow-hidden'>
       <div className='relative group'>
         <div className='bg-neutral-800 border-3 border-neutral-800 rounded-full overflow-hidden'>
           <motion.div

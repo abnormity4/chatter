@@ -3,8 +3,6 @@ import { cva } from 'class-variance-authority';
 import SpinnerAnimation from '@/components/icons/SpinnerAnimation';
 import { motion } from 'motion/react';
 import { AnimatePresence } from 'framer-motion';
-import { FormFieldValidationProp } from '@/components/form-field-types';
-import { UIState } from '@/lib/types';
 import { Check } from 'lucide-react';
 import {
   FormFieldContextType,
@@ -39,7 +37,7 @@ FormField.Label = function FormFieldLabelContent({
   const { id } = useFormFieldContext();
   return (
     <label htmlFor={id}>
-      <p className='m-1 text-xs text-neutral-700 font-sans font-semibold leading-none'>
+      <p className='m-1 text-xs font-sans font-semibold leading-none'>
         {children}
       </p>
     </label>
@@ -47,16 +45,16 @@ FormField.Label = function FormFieldLabelContent({
 };
 
 const formFieldInput = cva(
-  'px-3 border h-9 bg-neutral-600/20 rounded-lg backdrop-blur-md text-sm font-light transition-colors outline-none flex items-center overflow-hidden',
+  'px-3 border h-9  rounded-lg backdrop-blur-md text-sm font-light transition-colors outline-none flex items-center overflow-hidden',
   {
     variants: {
       status: {
         neutral:
-          'border-neutral-900 focus:border-neutral-800 has-[:focus]:border-neutral-800',
-        warning: 'border-yellow-600',
-        error: 'border-red-600',
-        success: 'border-sky-600',
-        loading: 'border-neutral-500',
+          'bg-neutral-400/20 border-white/20 focus:border-white/40 has-[:focus]:border-white/30',
+        warning: 'border-amber-500',
+        error: 'bg-neutral-600/20 border-neutral-800',
+        success: 'bg-neutral-200/20 border-white/80',
+        loading: 'bg-neutral-600/30 border-neutral-800',
       },
     },
     defaultVariants: {
@@ -74,7 +72,7 @@ FormField.Input = function FormFieldInput({
   return (
     <div className={formFieldInput({ status })}>
       <input
-        className='text-neutral-800 w-full focus:outline-none group mask-[radial-gradient(circle_at_left,black_80%,transparent_100%)]'
+        className='w-full focus:outline-none group mask-[radial-gradient(circle_at_left,black_80%,transparent_100%)]'
         {...props}
         id={id}
       />
@@ -86,9 +84,9 @@ FormField.Input = function FormFieldInput({
 const formFieldMessage = cva('text-xs m-1', {
   variants: {
     status: {
-      error: 'text-red-600',
-      success: 'text-sky-600',
-      warning: 'text-yellow-600',
+      error: 'text-white',
+      success: 'text-emerald-400',
+      warning: 'text-amber-400',
       neutral: '',
       loading: '',
     },
@@ -130,7 +128,7 @@ FormField.Loader = function FormFieldLoader() {
   if (status !== 'loading') return null;
 
   return (
-    <div className='h-full w-5 flex items-center text-neutral-800'>
+    <div className='h-full w-5 flex items-center'>
       <SpinnerAnimation />
     </div>
   );
@@ -150,7 +148,7 @@ FormField.ValidationList = function FormFieldValidationList() {
         {errorList.map((err) => (
           <li
             key={err.id}
-            className={`relative text-[12px] leading-3 transition-colors ${!err.passed ? 'text-neutral-500' : 'text-neutral-800'} select-none`}>
+            className={`relative text-[12px] leading-3 transition-colors ${!err.passed ? 'text-white/50' : 'text-white'} select-none`}>
             {err.passed && <Check className='absolute -left-3 size-3' />}
             {err.message}
           </li>

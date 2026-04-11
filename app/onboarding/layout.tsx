@@ -49,7 +49,7 @@ const OnboardingLayout = async () => {
   const avatarUrls = await getAvatars();
 
   return (
-    <div className='backdrop-blur-3xl flex min-h-screen items-center justify-center font-sans onboarding-gradient'>
+    <div className='backdrop-blur-3xl flex min-h-screen items-center justify-center font-sans landing-gradient'>
       <OnboardingPage avatarUrls={avatarUrls} />
     </div>
   );
