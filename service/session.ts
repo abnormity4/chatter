@@ -1,5 +1,5 @@
 import { cookies } from 'next/headers';
-import redis from '../redis';
+import redis from '../lib/redis';
 
 export type SessionData = {
   ipAddress: string | null;

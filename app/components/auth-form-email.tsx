@@ -1,10 +1,10 @@
 import { useState, useRef, ChangeEvent } from 'react';
 import FormField from '@/components/form-field';
 import { debounce } from '@/lib/utils';
-import { emailSchema } from '@/lib/zodschemas';
+import { emailSchema } from '@/app/schemas';
 import type { FormFieldUIStatus } from './auth-form-types';
 import { useAuthFormContext } from './auth-form';
-import { checkEmailAvailability } from '@/app/actions';
+import { isEmailValid } from '@/app/schemas';
 
 const AuthFormEmail = () => {
   const { setFormData, setFormValidation, formMode } = useAuthFormContext();
@@ -19,33 +19,6 @@ const AuthFormEmail = () => {
     setFormValidation((prev) => ({ ...prev, email: false }));
   };
 
-  const validateEmail = (value: string) => {
-    const validationResult = emailSchema.safeParse(value);
-    if (!validationResult.success) {
-      setEmailForm({
-        status: 'error',
-        message: 'Please enter a valid email address.',
-      });
-      return false;
-    }
-    return validationResult.data;
-  };
-
-  const validateEmailAvailability = async (email: string) => {
-    setEmailForm({ status: 'loading', message: null });
-
-    const isAlreadyRegistered = await checkEmailAvailability(email);
-
-    if (isAlreadyRegistered) {
-      setEmailForm({
-        status: 'error',
-        message: 'An account with this email already exists.',
-      });
-      return false;
-    }
-    return true;
-  };
-
   const markAsValid = () => {
     setEmailForm({ status: 'success', message: null });
     setFormValidation((prev) => ({ ...prev, email: true }));
@@ -53,12 +26,30 @@ const AuthFormEmail = () => {
 
   const debouncedValidation = useRef(
     debounce(async (value: string) => {
-      const validatedEmail = validateEmail(value);
-      if (!validatedEmail) return;
+      const validatedEmail = isEmailValid(value);
+      if (!validatedEmail) {
+        setEmailForm({
+          status: 'error',
+          message: 'Please enter a valid email address.',
+        });
+        setFormValidation((prev) => ({ ...prev, email: false }));
+      }
 
       if (formMode === 'signup') {
-        const isAvailable = await validateEmailAvailability(validatedEmail);
-        if (!isAvailable) return;
+        const result = await fetch('/api/auth/check-availability', {
+          method: 'POST',
+          body: JSON.stringify({ email: value }),
+        }).then((res) => res.json()); //TODO: fix race condition (abortcontroller)
+
+        if (!result.success) {
+          setEmailForm({
+            status: 'error',
+            message: 'Email is already in use.',
+          });
+          setFormValidation((prev) => ({ ...prev, email: false }));
+          return;
+        }
+        return; //TODO: refactor component
       }
 
       markAsValid();

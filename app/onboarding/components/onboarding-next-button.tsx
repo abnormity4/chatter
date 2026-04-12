@@ -23,7 +23,7 @@ const OnboardingNextButton = ({ className }: ComponentProps<'div'>) => {
     if (!isLastStep) {
       setCurrentStepIndex(currentStepIndex + 1);
     } else {
-      router.replace('/'); // TODO: replace with actual app
+      router.replace('/'); // TODO: replace with actual app (/chat)
     }
   };
 
@@ -39,7 +39,9 @@ const OnboardingNextButton = ({ className }: ComponentProps<'div'>) => {
         </button>
       )}
 
-      <button className={`${buttonStyle} justify-self-end`} onClick={goToNextStep}>
+      <button
+        className={`${buttonStyle} justify-self-end`}
+        onClick={goToNextStep}>
         <p>{isLastStep ? 'Finish onboarding' : 'Next'}</p>
         <ChevronRight className='size-5' />
       </button>

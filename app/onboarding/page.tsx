@@ -113,4 +113,4 @@ const OnboardingPage = ({ avatarUrls }: { avatarUrls: string[] }) => {
 
 export default OnboardingPage;
 
-//TODO: expand when chat creating are added
+//TODO: expand when chatrooms are are added

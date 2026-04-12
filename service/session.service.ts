@@ -1,5 +1,5 @@
-import type { SessionData } from './session-store';
-import { redisController, setCookie, getCookie } from './session-store';
+import type { SessionData } from './session';
+import { redisController, setCookie, getCookie } from './session';
 
 export const createSession = async ({
   ipAddress,

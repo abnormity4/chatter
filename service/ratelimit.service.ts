@@ -1,8 +1,13 @@
-import redis from '../redis';
-import { AUTH_RATELIMIT_MAX_REQUESTS, AUTH_RATELIMIT_TTL } from '../constants';
+import redis from '../lib/redis';
 import { RateExceededError, ErrorCodes } from '@/exceptions/root';
 
-export const rateLimitByIp = async (ip: string | null) => {
+export const AUTH_RATELIMIT_TTL = 60;
+export const AUTH_RATELIMIT_MAX_REQUESTS = 10;
+
+export const rateLimitByIp = async (
+  ip: string | null,
+  maxRequests: number = AUTH_RATELIMIT_MAX_REQUESTS,
+) => {
   if (!ip) return;
 
   const rateLimitKey = `ratelimit:ip:${ip}`;
@@ -11,7 +16,6 @@ export const rateLimitByIp = async (ip: string | null) => {
   const isBlocked = await redis.get(blockKey);
 
   if (isBlocked === '1') {
-    console.log('You are blocked from making requests for 15 minutes');
     throw new RateExceededError(
       ErrorCodes.RATE_LIMIT_EXCEEDED,
       'Too many requests. Please try again later.',
@@ -24,8 +28,10 @@ export const rateLimitByIp = async (ip: string | null) => {
     await redis.expire(rateLimitKey, AUTH_RATELIMIT_TTL);
   }
 
-  if (currentCount >= AUTH_RATELIMIT_MAX_REQUESTS) {
+  if (currentCount >= maxRequests) {
     await redis.setEx(blockKey, AUTH_RATELIMIT_TTL, '1');
     await redis.expire(rateLimitKey, AUTH_RATELIMIT_TTL);
   }
 };
+
+//TODO: change to sliding window algorithm

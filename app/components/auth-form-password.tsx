@@ -1,7 +1,7 @@
 import { useState, ChangeEvent } from 'react';
 import { FormFieldValidationProp } from '@/components/form-field-types';
-import { PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH } from '@/lib/constants';
-import { passwordSchema } from '@/lib/zodschemas';
+import { PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH } from '@/app/schemas';
+import { passwordSchema } from '@/app/schemas';
 import FormField from '@/components/form-field';
 import { Eye, EyeOff } from 'lucide-react';
 import { z } from 'zod';

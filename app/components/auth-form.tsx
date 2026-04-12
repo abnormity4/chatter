@@ -1,6 +1,5 @@
 'use client';
 import { useState, createContext, useContext } from 'react';
-import { createUser, logIn } from '@/app/actions';
 import type { FormFieldUIStatus, AuthServerResponse } from './auth-form-types';
 import { useRouter } from 'next/navigation';
 import AuthFormEmail from './auth-form-email';
@@ -57,9 +56,12 @@ const AuthForm = () => {
   const handleSignup = async (form: { email: string; password: string }) => {
     if (!canSubmit) return;
 
-    formEnableSubmit();
+    formIsBeingSubmitted();
 
-    const result: AuthServerResponse = await createUser(form);
+    const result = await fetch('/api/auth/signup', {
+      method: 'POST',
+      body: JSON.stringify(form),
+    }).then((res) => res.json());
 
     if (!result.success) {
       setFormStatus({ status: 'error', message: result.message });
@@ -73,9 +75,12 @@ const AuthForm = () => {
   const handleLogin = async (form: { email: string; password: string }) => {
     if (!canSubmit) return;
 
-    formEnableSubmit();
+    formIsBeingSubmitted();
 
-    const result: AuthServerResponse = await logIn(form);
+    const result = await fetch('/api/auth/login', {
+      method: 'POST',
+      body: JSON.stringify(form),
+    }).then((res) => res.json());
 
     if (!result.success) {
       setFormStatus({ status: 'error', message: result.message });
@@ -93,7 +98,7 @@ const AuthForm = () => {
     setIsBeingSubmitted(false);
   };
 
-  const formEnableSubmit = () => {
+  const formIsBeingSubmitted = () => {
     setIsBeingSubmitted(true);
     setFormStatus({ status: 'neutral', message: null });
   };
