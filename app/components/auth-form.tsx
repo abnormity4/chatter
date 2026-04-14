@@ -1,6 +1,6 @@
 'use client';
 import { useState, createContext, useContext } from 'react';
-import type { FormFieldUIStatus, AuthServerResponse } from './auth-form-types';
+import type { FormFieldUIStatus } from './auth-form-types';
 import { useRouter } from 'next/navigation';
 import AuthFormEmail from './auth-form-email';
 import AuthFormPassword from './auth-form-password';
@@ -149,6 +149,7 @@ const AuthForm = () => {
               ? 'Already have an account?'
               : "Don't have an account?"}
             <span
+              role='button'
               onClick={() => {
                 if (isBeingSubmitted) return;
                 setFormMode((prev) => (prev === 'signup' ? 'login' : 'signup'));

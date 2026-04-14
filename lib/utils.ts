@@ -3,7 +3,7 @@ type AnyFunction = (...args: any[]) => any;
 export function debounce<T extends AnyFunction>(func: T, delay: number) {
   let timeoutId: ReturnType<typeof setTimeout>;
 
-  const debounced = function (this: any, ...args: Parameters<T>) {
+  const debounced = function (this: unknown, ...args: Parameters<T>) {
     clearTimeout(timeoutId);
 
     timeoutId = setTimeout(() => {

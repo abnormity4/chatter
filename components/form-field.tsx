@@ -143,6 +143,7 @@ FormField.ValidationList = function FormFieldValidationList() {
     <motion.div
       initial={{ opacity: 0, y: -5 }}
       animate={{ opacity: 1, y: 0 }}
+      aria-label='validation-list'
       className='absolute pl-3 pt-2'>
       <ul className='space-y-1'>
         {errorList.map((err) => (

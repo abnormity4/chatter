@@ -72,6 +72,7 @@ const AuthFormPassword = () => {
     <FormField status={passwordForm.status} errorList={passwordErrorList}>
       <FormField.Label>Password</FormField.Label>
       <FormField.Input
+        aria-label='Password'
         type={passwordVisible ? 'text' : 'password'}
         placeholder={passwordVisible ? 'password321%!@' : '••••••••••'}
         onChange={(e) => {

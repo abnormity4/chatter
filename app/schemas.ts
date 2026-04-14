@@ -1,4 +1,3 @@
-import { form } from 'motion/react-client';
 import { z } from 'zod';
 
 export const PASSWORD_MIN_LENGTH = 8;

@@ -113,6 +113,7 @@ const AuthFormEmail = () => {
     <FormField status={emailForm.status}>
       <FormField.Label>Email</FormField.Label>
       <FormField.Input
+        aria-label='Email'
         type='email'
         placeholder='mail@example.com'
         onChange={(e) => {
