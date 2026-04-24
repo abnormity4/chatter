@@ -1,7 +1,10 @@
 'use client';
 import { Plus } from 'lucide-react';
+import { useChatWindowContext } from './chat-window';
 
 const ChatWindowInput = () => {
+  const { ws } = useChatWindowContext();
+
   return (
     <div className='flex w-full gap-2'>
       <div className='bg-neutral-950/15 min-h-14 h-auto rounded-2xl overflow-hidden flex w-max-full w-full items-center px-3'>
