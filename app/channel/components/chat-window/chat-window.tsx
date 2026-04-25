@@ -1,9 +1,6 @@
 "use client"
 
 import ChatWindowInput from './chat-window-input';
-import ChatWindowMessage from './chat-window-message';
-import ChatWindowTypingUsers from './chat-window-typingusers';
-import ChatWindowDivider from './chat-window-divider';
 import { createContext, useContext, useEffect, useRef } from 'react';
 
 const ChatWindowContext = createContext(undefined);
@@ -29,11 +26,7 @@ const ChatWindow = () => {
     <ChatWindowContext value={{ ws: wsRef.current }}>
     <div className='overflow-hidden h-screen grid grid-rows-[90%_10%] relative bg-slate-600 backdrop-blur-3xl w-1/2'>
       <div className='p-4 relative'>
-        <ChatWindowMessage />
-        <ChatWindowDivider />
-        <ChatWindowMessage />
         <div className='h-8 w-1/2 absolute bottom-1 left-6'>
-          <ChatWindowTypingUsers />
         </div>
       </div>
 

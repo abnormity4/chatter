@@ -2,12 +2,25 @@
 import { Plus } from 'lucide-react';
 import { useChatWindowContext } from './chat-window';
 import useKeyboard from '@/hooks/useKeyboard';
+import { useRef, useState } from 'react';
 
 const ChatWindowInput = () => {
   const { ws } = useChatWindowContext();
 
-  const keypress = useKeyboard(['Enter', 'F'], () => console.log('Keyboard pressed'), true);
-  
+  const [message, setMessage] = useState("");
+
+  const inputRef = useRef<string>("");
+  const sendMessage = () => {
+    if (message.trim() === "") return;
+    ws.send(message);
+    setMessage("");
+  }
+  const keypress = useKeyboard(['Enter'], sendMessage);
+
+
+
+
+
   return (
     <div className='flex w-full gap-2'>
       <div className='bg-neutral-950/15 min-h-14 h-auto rounded-2xl overflow-hidden flex w-max-full w-full items-center px-3'>
@@ -17,8 +30,10 @@ const ChatWindowInput = () => {
         <div className='max-w-full flex items-center justify-center flex-1 min-w-0'>
           <textarea
             spellCheck={false}
+            value={message}
             className='flex-1 h-7 pl-4 pt-0.5 resize-none focus:outline-none'
             placeholder='Message in #general'
+            onChange={(e) => setMessage(e.target.value)}
           />
         </div>
       </div>
