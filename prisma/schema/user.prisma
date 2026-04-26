@@ -1,10 +1,11 @@
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  displayName String @map("display_name")
-  password  String
-  avatar    String?
-  createdAt DateTime @default(now()) @map("created_at")
+  id          String    @id @default(cuid())
+  email       String    @unique
+  displayName String    @map("display_name")
+  password    String
+  avatar      String?
+  createdAt   DateTime  @default(now()) @map("created_at")
+  messages    Message[]
 
   @@map("users")
 }

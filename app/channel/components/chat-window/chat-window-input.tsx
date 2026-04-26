@@ -2,20 +2,26 @@
 import { Plus } from 'lucide-react';
 import { useChatWindowContext } from './chat-window';
 import useKeyboard from '@/hooks/useKeyboard';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 
 const ChatWindowInput = () => {
-  const { ws } = useChatWindowContext();
+  const { ws, currentUser } = useChatWindowContext();
 
   const [message, setMessage] = useState("");
 
-  const inputRef = useRef<string>("");
+
   const sendMessage = () => {
     if (message.trim() === "") return;
-    ws.send(message);
+
+    ws.send(JSON.stringify({
+      event: 'message',
+      userId: currentUser.id,
+      content: message,
+    }))
     setMessage("");
   }
-  const keypress = useKeyboard(['Enter'], sendMessage);
+  
+  useKeyboard(['Enter'], sendMessage);
 
 
 
@@ -28,7 +34,7 @@ const ChatWindowInput = () => {
           <Plus className='size-7 shrink-0  stroke-neutral-400 hover:stroke-seagreen-200 transition-colors cursor-pointer' />
         </div>
         <div className='max-w-full flex items-center justify-center flex-1 min-w-0'>
-          <textarea
+          <input
             spellCheck={false}
             value={message}
             className='flex-1 h-7 pl-4 pt-0.5 resize-none focus:outline-none'
