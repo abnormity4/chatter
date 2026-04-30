@@ -1,18 +1,18 @@
 import { redirect } from 'next/navigation';
-import ChatWindow from './components/chat-window/chat-window';
-import getCurrentUser from '@/lib/auth/getCurrentUser';
+import ChatWindow from '../../src/channel/components/chat-window/chat-window';
+import getAuthenticatedUser from '@/src/shared/services/auth/get-authenticated-user.service';
 
 const ChannelPage = async () => {
   let currentUser;
 
   try {
-    const getUser = await getCurrentUser();
+    const getUser = await getAuthenticatedUser();
     currentUser = getUser;
   } catch {
-    redirect('/')
+    redirect('/');
   }
 
-  console.log(currentUser)
+  console.log(currentUser);
 
   return (
     <div>

@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import { Google_Sans_Flex, Quicksand, Instrument_Sans } from 'next/font/google';
 import './globals.css';
-
 const googleSans = Google_Sans_Flex({
   variable: '--font-google-sans-flex',
   subsets: ['latin'],
