@@ -53,54 +53,46 @@ const AuthForm = () => {
   const canSubmit = Object.values(formValidation).every((v) => v);
   const router = useRouter();
 
-  const handleSignup = async (form: { email: string; password: string }) => {
+  const LOGIN_URL = '/api/auth/login'
+  const SIGNUP_URL = '/api/auth/signup'
+  const REDIRECT_URL = '/onboarding'
+
+  const handleSubmit = async (
+    form: { email: string; password: string },
+    url: string,
+    redirectTo: string
+  ): Promise<void> => {
     if (!canSubmit) return;
 
-    formIsBeingSubmitted();
+    setIsBeingSubmitted(true);
+    setFormStatus({ status: 'loading', message: null });
 
-    const result = await fetch('/api/auth/signup', {
-      method: 'POST',
-      body: JSON.stringify(form),
-    }).then((res) => res.json());
+    try {
+      const request = await fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(form),
+      })
 
-    if (!result.success) {
-      setFormStatus({ status: 'error', message: result.message });
-      setIsBeingSubmitted(false);
-      return;
+      const result = await request.json();
+
+      if (!result.success) throw new Error(result.message)
+
+      router.push(redirectTo)
+    
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setFormStatus({ status: 'error', message: error.message})
+      }
+    } finally {
+      setIsBeingSubmitted(false)
     }
-
-    router.push('/onboarding');
-  };
-
-  const handleLogin = async (form: { email: string; password: string }) => {
-    if (!canSubmit) return;
-
-    formIsBeingSubmitted();
-
-    const result = await fetch('/api/auth/login', {
-      method: 'POST',
-      body: JSON.stringify(form),
-    }).then((res) => res.json());
-
-    if (!result.success) {
-      setFormStatus({ status: 'error', message: result.message });
-      setIsBeingSubmitted(false);
-      return;
-    }
-
-    router.push('/onboarding');
-  };
+  }
 
   const formReset = () => {
     setFormData({ email: '', password: '' });
     setFormValidation({ email: false, password: false });
     setFormStatus({ status: 'neutral', message: null });
     setIsBeingSubmitted(false);
-  };
-
-  const formIsBeingSubmitted = () => {
-    setIsBeingSubmitted(true);
-    setFormStatus({ status: 'neutral', message: null });
   };
 
   return (
@@ -133,8 +125,8 @@ const AuthForm = () => {
             }
             onClick={() =>
               formMode === 'signup'
-                ? handleSignup(formData)
-                : handleLogin(formData)
+                ? handleSubmit(formData, SIGNUP_URL, REDIRECT_URL)
+                : handleSubmit(formData, LOGIN_URL, REDIRECT_URL)
             }
             disabled={!canSubmit}>
             {isBeingSubmitted
