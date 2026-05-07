@@ -1,3 +1,4 @@
+import { AuthError, ErrorCodes } from '../../exceptions/root';
 import { getCookie, setCookie } from './cookies.service';
 import redis from '@/lib/redis';
 
@@ -30,11 +31,11 @@ const redisController = {
       .expire(`${SESSION_NAME}:${generatedToken}`, SESSION_TTL)
       .exec();
   },
-  deleteSession: async (browserSessionToken: string, userId: string): Promise<void> => {
+  deleteSession: async (sessionCookie: string, userId: string): Promise<void> => {
     await redis
       .multi()
-      .del(`${SESSION_NAME}:${browserSessionToken}`)
-      .sRem(`user_sessions:${userId}`, `${SESSION_NAME}:${browserSessionToken}`)
+      .del(`${SESSION_NAME}:${sessionCookie}`)
+      .sRem(`user_sessions:${userId}`, `${SESSION_NAME}:${sessionCookie}`)
       .exec();
   },
 };
@@ -46,10 +47,10 @@ export const createSession = async ({
 }: SessionData): Promise<void> => {
   const generatedToken = crypto.randomUUID();
 
-  const browserSessionToken = await getCookie(SESSION_NAME);
+  const sessionCookie = await getCookie(SESSION_NAME);
 
-  if (browserSessionToken) {
-    await redisController.deleteSession(browserSessionToken, userId);
+  if (sessionCookie) {
+    await redisController.deleteSession(sessionCookie, userId);
   }
 
   await setCookie(SESSION_NAME, generatedToken, SESSION_TTL);
@@ -61,3 +62,17 @@ export const createSession = async ({
     generatedToken,
   });
 };
+
+export const validateSession = async (): Promise<string> => {
+  
+  const sessionCookie = await getCookie(SESSION_NAME);
+
+  if (!sessionCookie) throw new AuthError(ErrorCodes.SESSION_NOT_FOUND, 'Session not found');
+
+  const userId = await redis.hGet(`session:${sessionCookie}`, 'userId');
+
+  if (!userId) throw new AuthError(ErrorCodes.SESSION_NOT_FOUND, 'Session not found');
+
+  return userId
+}
+

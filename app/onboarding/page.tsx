@@ -1,9 +1,6 @@
 import Onboarding from '@/src/onboarding/components/onboarding';
 import { readdir } from 'fs/promises';
 import path from 'path';
-import { cookies } from 'next/headers';
-import { redirect } from 'next/navigation';
-import redis from '@/lib/redis';
 
 const validImageExtensions = ['.webp', '.jpg', '.svg', '.png'];
 
@@ -32,19 +29,6 @@ const getAvatars = async () => {
 };
 
 const OnboardingPage = async () => {
-  const cookieStore = await cookies();
-  const sessionToken = cookieStore.get('session');
-  console.log(sessionToken);
-
-  if (!sessionToken) {
-    redirect('/');
-  }
-
-  const userId = await redis.hGet(`session:${sessionToken.value}`, 'userId');
-
-  if (!userId) {
-    redirect('/');
-  }
 
   const avatarUrls = await getAvatars();
 
