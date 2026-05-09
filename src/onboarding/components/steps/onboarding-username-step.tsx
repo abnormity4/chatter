@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import type { FormFieldValidationProp } from '@/src/shared/components/form-field-types';
 import FormField from '@/src/shared/components/form-field';
-import { useOnboardingContext, usernameDefault } from '../onboarding';
+import { useOnboardingContext } from '../onboarding';
 import { z } from 'zod';
 
 const USERNAME_MIN_LENGTH = 3;
@@ -14,7 +14,7 @@ const usernameSchema = z
   .max(USERNAME_MAX_LENGTH, 'invalid_length');
 
 const OnboardingUsernameStep = () => {
-  const { setOnboardingData, setStepsCompletion } = useOnboardingContext();
+  const { defaultUsername, setOnboardingData, setStepsCompletion } = useOnboardingContext();
   const [hadInput, setHadInput] = useState(false);
   const [validationErrors, setValidationErrors] =
     useState<FormFieldValidationProp>([
@@ -29,7 +29,7 @@ const OnboardingUsernameStep = () => {
     if (!hadInput) setHadInput(true);
 
     if (value === '') {
-      setOnboardingData((prev) => ({ ...prev, username: usernameDefault }));
+      setOnboardingData((prev) => ({ ...prev, username: defaultUsername }));
       setStepsCompletion((prev) => ({ ...prev, username: false }));
       return;
     }
@@ -62,7 +62,7 @@ const OnboardingUsernameStep = () => {
     <div className='w-64'>
       <FormField errorList={validationErrors}>
         <FormField.Input
-          placeholder='Your username...'
+          placeholder={defaultUsername}
           onChange={(e) => handleChange(e.target.value)}
         />
         {hadInput && <FormField.ValidationList />}

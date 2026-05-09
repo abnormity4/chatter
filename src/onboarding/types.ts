@@ -25,4 +25,5 @@ export type OnboardingContextType = {
   >;
   currentStepIndex: number;
   setCurrentStepIndex: React.Dispatch<React.SetStateAction<number>>;
+  defaultUsername: string
 };

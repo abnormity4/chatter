@@ -28,11 +28,11 @@ const getAvatars = async () => {
   return files;
 };
 
-const OnboardingPage = async () => {
+const OnboardingPage = async ({currentUser}) => {
 
   const avatarUrls = await getAvatars();
 
-  return <Onboarding avatarUrls={avatarUrls} />;
+  return <Onboarding avatarUrls={avatarUrls} currentUser={currentUser} />;
 };
 
 export default OnboardingPage;

@@ -7,7 +7,7 @@ export async function proxy(request: NextRequest) {
         const userId: string = await validateSession();
 
         const requestHeaders = new Headers(request.headers);
-        requestHeaders.set('x-user-id', userId);
+        requestHeaders.set('x-user-id', userId); //TODO: move to constants
 
         return NextResponse.next({
             request: {

@@ -5,7 +5,7 @@ import { ComponentProps } from 'react';
 import { useOnboardingContext } from './onboarding';
 import { useRouter } from 'next/navigation';
 
-const OnboardingNextButton = ({ className }: ComponentProps<'div'>) => {
+const OnboardingNextButton = ({ className, onFinish }: {onFinish: () => Promise<void>} & ComponentProps<'div'>) => {
   const router = useRouter();
   const { steps, setCurrentStepIndex, currentStepIndex } =
     useOnboardingContext();
@@ -19,11 +19,12 @@ const OnboardingNextButton = ({ className }: ComponentProps<'div'>) => {
     }
   };
 
-  const goToNextStep = () => {
+  const goToNextStep = async () => {
     if (!isLastStep) {
       setCurrentStepIndex(currentStepIndex + 1);
     } else {
-      router.replace('/'); // TODO: replace with actual app (/chat)
+      await onFinish()
+      router.replace('/channel'); 
     }
   };
 

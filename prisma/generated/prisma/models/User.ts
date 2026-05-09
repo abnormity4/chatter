@@ -31,6 +31,7 @@ export type UserMinAggregateOutputType = {
   password: string | null
   avatar: string | null
   createdAt: Date | null
+  isOnboarded: boolean | null
 }
 
 export type UserMaxAggregateOutputType = {
@@ -40,6 +41,7 @@ export type UserMaxAggregateOutputType = {
   password: string | null
   avatar: string | null
   createdAt: Date | null
+  isOnboarded: boolean | null
 }
 
 export type UserCountAggregateOutputType = {
@@ -49,6 +51,7 @@ export type UserCountAggregateOutputType = {
   password: number
   avatar: number
   createdAt: number
+  isOnboarded: number
   _all: number
 }
 
@@ -60,6 +63,7 @@ export type UserMinAggregateInputType = {
   password?: true
   avatar?: true
   createdAt?: true
+  isOnboarded?: true
 }
 
 export type UserMaxAggregateInputType = {
@@ -69,6 +73,7 @@ export type UserMaxAggregateInputType = {
   password?: true
   avatar?: true
   createdAt?: true
+  isOnboarded?: true
 }
 
 export type UserCountAggregateInputType = {
@@ -78,6 +83,7 @@ export type UserCountAggregateInputType = {
   password?: true
   avatar?: true
   createdAt?: true
+  isOnboarded?: true
   _all?: true
 }
 
@@ -160,6 +166,7 @@ export type UserGroupByOutputType = {
   password: string
   avatar: string | null
   createdAt: Date
+  isOnboarded: boolean
   _count: UserCountAggregateOutputType | null
   _min: UserMinAggregateOutputType | null
   _max: UserMaxAggregateOutputType | null
@@ -190,6 +197,7 @@ export type UserWhereInput = {
   password?: Prisma.StringFilter<"User"> | string
   avatar?: Prisma.StringNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  isOnboarded?: Prisma.BoolFilter<"User"> | boolean
   messages?: Prisma.MessageListRelationFilter
 }
 
@@ -200,6 +208,7 @@ export type UserOrderByWithRelationInput = {
   password?: Prisma.SortOrder
   avatar?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  isOnboarded?: Prisma.SortOrder
   messages?: Prisma.MessageOrderByRelationAggregateInput
 }
 
@@ -213,6 +222,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   password?: Prisma.StringFilter<"User"> | string
   avatar?: Prisma.StringNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  isOnboarded?: Prisma.BoolFilter<"User"> | boolean
   messages?: Prisma.MessageListRelationFilter
 }, "id" | "email">
 
@@ -223,6 +233,7 @@ export type UserOrderByWithAggregationInput = {
   password?: Prisma.SortOrder
   avatar?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  isOnboarded?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
   _max?: Prisma.UserMaxOrderByAggregateInput
   _min?: Prisma.UserMinOrderByAggregateInput
@@ -238,6 +249,7 @@ export type UserScalarWhereWithAggregatesInput = {
   password?: Prisma.StringWithAggregatesFilter<"User"> | string
   avatar?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
+  isOnboarded?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
 }
 
 export type UserCreateInput = {
@@ -247,6 +259,7 @@ export type UserCreateInput = {
   password: string
   avatar?: string | null
   createdAt?: Date | string
+  isOnboarded?: boolean
   messages?: Prisma.MessageCreateNestedManyWithoutSenderInput
 }
 
@@ -257,6 +270,7 @@ export type UserUncheckedCreateInput = {
   password: string
   avatar?: string | null
   createdAt?: Date | string
+  isOnboarded?: boolean
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
 }
 
@@ -267,6 +281,7 @@ export type UserUpdateInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isOnboarded?: Prisma.BoolFieldUpdateOperationsInput | boolean
   messages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
 }
 
@@ -277,6 +292,7 @@ export type UserUncheckedUpdateInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isOnboarded?: Prisma.BoolFieldUpdateOperationsInput | boolean
   messages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
 }
 
@@ -287,6 +303,7 @@ export type UserCreateManyInput = {
   password: string
   avatar?: string | null
   createdAt?: Date | string
+  isOnboarded?: boolean
 }
 
 export type UserUpdateManyMutationInput = {
@@ -296,6 +313,7 @@ export type UserUpdateManyMutationInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isOnboarded?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type UserUncheckedUpdateManyInput = {
@@ -305,6 +323,7 @@ export type UserUncheckedUpdateManyInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isOnboarded?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type UserScalarRelationFilter = {
@@ -319,6 +338,7 @@ export type UserCountOrderByAggregateInput = {
   password?: Prisma.SortOrder
   avatar?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  isOnboarded?: Prisma.SortOrder
 }
 
 export type UserMaxOrderByAggregateInput = {
@@ -328,6 +348,7 @@ export type UserMaxOrderByAggregateInput = {
   password?: Prisma.SortOrder
   avatar?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  isOnboarded?: Prisma.SortOrder
 }
 
 export type UserMinOrderByAggregateInput = {
@@ -337,6 +358,7 @@ export type UserMinOrderByAggregateInput = {
   password?: Prisma.SortOrder
   avatar?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  isOnboarded?: Prisma.SortOrder
 }
 
 export type UserCreateNestedOneWithoutMessagesInput = {
@@ -357,6 +379,10 @@ export type NullableStringFieldUpdateOperationsInput = {
   set?: string | null
 }
 
+export type BoolFieldUpdateOperationsInput = {
+  set?: boolean
+}
+
 export type UserCreateWithoutMessagesInput = {
   id?: string
   email: string
@@ -364,6 +390,7 @@ export type UserCreateWithoutMessagesInput = {
   password: string
   avatar?: string | null
   createdAt?: Date | string
+  isOnboarded?: boolean
 }
 
 export type UserUncheckedCreateWithoutMessagesInput = {
@@ -373,6 +400,7 @@ export type UserUncheckedCreateWithoutMessagesInput = {
   password: string
   avatar?: string | null
   createdAt?: Date | string
+  isOnboarded?: boolean
 }
 
 export type UserCreateOrConnectWithoutMessagesInput = {
@@ -398,6 +426,7 @@ export type UserUpdateWithoutMessagesInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isOnboarded?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type UserUncheckedUpdateWithoutMessagesInput = {
@@ -407,6 +436,7 @@ export type UserUncheckedUpdateWithoutMessagesInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isOnboarded?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 
@@ -447,6 +477,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   password?: boolean
   avatar?: boolean
   createdAt?: boolean
+  isOnboarded?: boolean
   messages?: boolean | Prisma.User$messagesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
@@ -458,6 +489,7 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   password?: boolean
   avatar?: boolean
   createdAt?: boolean
+  isOnboarded?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -467,6 +499,7 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   password?: boolean
   avatar?: boolean
   createdAt?: boolean
+  isOnboarded?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectScalar = {
@@ -476,9 +509,10 @@ export type UserSelectScalar = {
   password?: boolean
   avatar?: boolean
   createdAt?: boolean
+  isOnboarded?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "displayName" | "password" | "avatar" | "createdAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "displayName" | "password" | "avatar" | "createdAt" | "isOnboarded", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   messages?: boolean | Prisma.User$messagesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -498,6 +532,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     password: string
     avatar: string | null
     createdAt: Date
+    isOnboarded: boolean
   }, ExtArgs["result"]["user"]>
   composites: {}
 }
@@ -928,6 +963,7 @@ export interface UserFieldRefs {
   readonly password: Prisma.FieldRef<"User", 'String'>
   readonly avatar: Prisma.FieldRef<"User", 'String'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
+  readonly isOnboarded: Prisma.FieldRef<"User", 'Boolean'>
 }
     
 

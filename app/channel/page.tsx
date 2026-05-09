@@ -3,6 +3,7 @@ import prisma from '@/lib/prisma';
 import {redirect, RedirectType} from 'next/navigation'
 import { USERAVATAR_DEFAULT_URL } from '@/src/onboarding/components/onboarding';
 import { headers } from "next/headers";
+import OnboardingPage from './(onboarding)/page';
 
 const ChannelPage = async () => {
 
@@ -15,10 +16,11 @@ const ChannelPage = async () => {
       where: { id: userId},
       select: {
            displayName: true,
-           avatar: true
-           //isOnboarded: true
+           avatar: true,
+           isOnboarded: true
       }
    })
+   //TODO: type properly 
 
     if (!user) {
         redirect('/', RedirectType.replace)
@@ -28,6 +30,16 @@ const ChannelPage = async () => {
         ...user,
         avatar: user.avatar || USERAVATAR_DEFAULT_URL
     }
+
+
+  if (!currentUser.isOnboarded) {
+    return (
+      <div className='backdrop-blur-3xl flex min-h-screen items-center justify-center font-sans landing-gradient'>
+          <OnboardingPage currentUser={currentUser} />
+      </div>
+
+    )
+  }
 
   return (
     <div>

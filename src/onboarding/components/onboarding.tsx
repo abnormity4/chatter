@@ -2,13 +2,13 @@
 
 import { createContext, useState, useContext } from 'react';
 import OnboardingProgressBar from '@/src/onboarding/components/onboarding-progressbar';
-import { SquareArrowRightExit } from 'lucide-react';
 import OnboardingUserAvatar from '@/src/onboarding/components/onboarding-useravatar';
 import { OnboardingContextType } from '../types';
 import OnboardingUsernameStep from '@/src/onboarding/components/steps/onboarding-username-step';
 import OnboardingUserAvatarStep from '@/src/onboarding/components/steps/onboarding-useravatar-step';
 import OnboardingNextButton from '@/src/onboarding/components/onboarding-next-button';
 import { motion } from 'motion/react';
+import { completeOnboarding } from '../lib/actions';
 
 const OnboardingContext = createContext<OnboardingContextType | undefined>(
   undefined,
@@ -25,9 +25,10 @@ export const useOnboardingContext = () => {
 };
 
 export const USERAVATAR_DEFAULT_URL = '/useravatar-none.svg';
-export const usernameDefault = 'Your nickname';
 
-const Onboarding = ({ avatarUrls }: { avatarUrls: string[] }) => {
+const Onboarding = ({ avatarUrls, currentUser }: { avatarUrls: string[] }) => {
+  const defaultUsername = currentUser.displayName
+  
   const steps = [
     {
       id: 'username',
@@ -54,8 +55,8 @@ const Onboarding = ({ avatarUrls }: { avatarUrls: string[] }) => {
   const currentStepId = steps[currentStepIndex].id;
 
   const [onboardingData, setOnboardingData] = useState({
-    username: usernameDefault, //TODO: replace with actual username from db
-    avatar: USERAVATAR_DEFAULT_URL,
+    username: defaultUsername, 
+    avatar: currentUser.avatar,
   });
 
   const [avatarWasChanged, setAvatarWasChanged] = useState(false);
@@ -74,6 +75,7 @@ const Onboarding = ({ avatarUrls }: { avatarUrls: string[] }) => {
         setStepsCompletion,
         currentStepIndex,
         setCurrentStepIndex,
+        defaultUsername
       }}>
       <main className='w-1/3 border-r border-l relative h-screen dark:bg-black/20 sm:items-start bg-white/5 backdrop-blur-xl border border-white/20 overflow-hidden'>
         <div className='mb-12'>
@@ -83,11 +85,6 @@ const Onboarding = ({ avatarUrls }: { avatarUrls: string[] }) => {
             color='bg-seagreen-400/80'
             bgColor='bg-neutral-900/50'
           />
-        </div>
-
-        <div className='absolute -left-24 top-4 cursor-pointer text-[16px] text-white/80 hover:text-white/80 transition-colors'>
-          <span>Log out</span>
-          <SquareArrowRightExit className='inline-block ml-1 size-4' />
         </div>
 
         <div className='grid grid-rows-[35%_45%_20%] h-full'>
@@ -103,7 +100,13 @@ const Onboarding = ({ avatarUrls }: { avatarUrls: string[] }) => {
             <CurrentStepComponent />
           </motion.div>
           <div className='h-fit'>
-            {isCurrentStepCompleted && <OnboardingNextButton />}
+            {isCurrentStepCompleted && 
+              <OnboardingNextButton onFinish={() => completeOnboarding({
+                displayName: onboardingData.username,
+                avatar: onboardingData.avatar,
+                isOnboarded: true
+              })} 
+            />}
           </div>
         </div>
       </main>

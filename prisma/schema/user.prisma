@@ -6,6 +6,7 @@ model User {
   avatar      String?
   createdAt   DateTime  @default(now()) @map("created_at")
   messages    Message[]
-
+  isOnboarded Boolean   @default(false) @map("is_onboarded")
+  
   @@map("users")
 }
