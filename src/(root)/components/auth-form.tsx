@@ -55,7 +55,7 @@ const AuthForm = () => {
 
   const LOGIN_URL = '/api/auth/login'
   const SIGNUP_URL = '/api/auth/signup'
-  const REDIRECT_URL = '/onboarding'
+  const REDIRECT_URL = '/channel'
 
   const handleSubmit = async (
     form: { email: string; password: string },

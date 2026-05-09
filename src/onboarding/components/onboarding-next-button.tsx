@@ -42,7 +42,7 @@ const OnboardingNextButton = ({ className }: ComponentProps<'div'>) => {
       <button
         className={`${buttonStyle} justify-self-end`}
         onClick={goToNextStep}>
-        <p>{isLastStep ? 'Finish onboarding' : 'Next'}</p>
+        <p>{isLastStep ? 'Finish (onboarding)' : 'Next'}</p>
         <ChevronRight className='size-5' />
       </button>
     </div>
