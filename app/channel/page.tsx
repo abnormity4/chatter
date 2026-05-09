@@ -1,18 +1,33 @@
-import { redirect } from 'next/navigation';
 import ChatWindow from '../../src/channel/components/chat-window/chat-window';
-import getAuthenticatedUser from '@/src/shared/services/auth/get-authenticated-user.service';
+import prisma from '@/lib/prisma';
+import {redirect, RedirectType} from 'next/navigation'
+import { USERAVATAR_DEFAULT_URL } from '@/src/onboarding/components/onboarding';
+import { headers } from "next/headers";
 
 const ChannelPage = async () => {
-  let currentUser;
 
-  try {
-    const getUser = await getAuthenticatedUser();
-    currentUser = getUser;
-  } catch {
-    redirect('/');
-  }
+  const headerList = await headers();
+  const userId = headerList.get('x-user-id')
 
-  console.log(currentUser);
+    if (!userId) redirect('/', RedirectType.replace)
+
+  const user = await prisma.user.findUnique({
+      where: { id: userId},
+      select: {
+           displayName: true,
+           avatar: true
+           //isOnboarded: true
+      }
+   })
+
+    if (!user) {
+        redirect('/', RedirectType.replace)
+    }
+
+    const currentUser = {
+        ...user,
+        avatar: user.avatar || USERAVATAR_DEFAULT_URL
+    }
 
   return (
     <div>
